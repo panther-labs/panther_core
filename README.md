@@ -41,7 +41,7 @@ There exists a utility script to update the version number in relevant files if 
 cd bin/
 ./version_bump.py 0.10.9  #replace with the new version you are releasing
 ```
-If you would rather use the `panther_analysis_tool` outside of the virtual environment, install it  directly:
+If you would rather use the `panther_core` outside of the virtual environment, install it  directly:
 
 ```bash
 $ make deps
