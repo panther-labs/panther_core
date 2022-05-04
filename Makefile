@@ -1,7 +1,6 @@
 packages = panther_core
 
-ci: lint unit integration
-
+ci: lint unit
 
 deps:
 	pipenv install --dev
@@ -27,14 +26,6 @@ install:
 
 unit:
 	pipenv run nosetests -v
-
-integration:
-	pipenv run panther_analysis_tool test --path tests/fixtures/detections/valid_analysis
-	rm -rf panther-analysis
-	git clone https://github.com/panther-labs/panther-analysis.git
-	cd panther-analysis && pipenv lock -r  | grep -v 'panther-analysis-tool==' > requirements.ci.txt
-	cd panther-analysis && pipenv install -r requirements.ci.txt
-	cd panther-analysis && pipenv run panther_analysis_tool --version && pipenv run panther_analysis_tool test --path .
 
 test: unit
 
