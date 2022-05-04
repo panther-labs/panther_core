@@ -22,7 +22,12 @@ import unittest
 from ..common import ExecutionMode
 
 from ..task import (
+    ExecutionTask,
     ExecutionTaskInput,
+    ExecutionTaskOptions,
+    ExecutionTaskEnv,
+    ExecutionEnv,
+    ExecutionTaskOutput,
 )
 
 from ..results import (
@@ -59,6 +64,35 @@ class TestSerialization(unittest.TestCase):
                 )
             )
         )
+
+    def test_task(self) -> None:
+        obj_a = ExecutionTask(
+            env=ExecutionTaskEnv(
+                mode=ExecutionMode.INLINE,
+                url=None,
+                env=ExecutionEnv(
+                    globals=[dict(id="a")],
+                    detections=[dict(id="b")],
+                    data_models=[],
+                )
+            ),
+            input=ExecutionTaskInput(
+                url=None,
+                mode=ExecutionMode.INLINE,
+                rows=[],
+                input_id_field="some_field",
+            ),
+            output=ExecutionTaskOutput(
+                url=None,
+                mode=ExecutionMode.INLINE,
+            ),
+            options=ExecutionTaskOptions(
+                execution_details=False,
+            ),
+        )
+
+        self.assertNotEqual("", obj_a.to_json())
+        self.assertEqual(obj_a, ExecutionTask.from_json(json.loads(obj_a.to_json())))
 
     def test_result(self) -> None:
         obj_a = ExecutionResult(
