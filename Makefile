@@ -3,9 +3,9 @@ packages = panther_core
 ci: unit
 
 deps:
-	pipenv install --dev
+	pip install -r requirements.txt
 
 unit:
-	pipenv run nosetests -v
+	python -m unittest discover -s .
 
 test: unit
