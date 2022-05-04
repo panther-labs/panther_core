@@ -1,1 +1,2 @@
 jsonpath-ng==1.5.3
+importlib-metadata==4.11.3
