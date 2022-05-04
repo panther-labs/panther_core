@@ -16,10 +16,13 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-from typing import Optional, List, Dict, Any
+from typing import Optional, List
 from dataclasses import dataclass
 
-from .common import _BaseDataObject, ExecutionMode
+from .common import (
+    _BaseDataObject, ExecutionMode, ExecutionEnvComponent,
+    ExecutionInputData, LogEventInput, CloudResourceInput
+)
 
 
 @dataclass(frozen=True)
@@ -29,11 +32,11 @@ class ExecutionTaskInput(_BaseDataObject):
 
     mode: ExecutionMode
     url: Optional[str]
-    rows: List[Any]
+    rows: List[ExecutionInputData]
     input_id_field: str
 
     @classmethod
-    def inline_resources(cls, resources: List[Any]):
+    def inline_resources(cls, resources: List[CloudResourceInput]):
         return cls(
             url=None,
             mode=ExecutionMode.INLINE,
@@ -42,7 +45,7 @@ class ExecutionTaskInput(_BaseDataObject):
         )
 
     @classmethod
-    def inline_events(cls, events: List[Any]):
+    def inline_events(cls, events: List[LogEventInput]):
         return cls(
             url=None,
             mode=ExecutionMode.INLINE,
@@ -71,9 +74,9 @@ class ExecutionTaskOptions(_BaseDataObject):
 
 @dataclass(frozen=True)
 class ExecutionEnv(_BaseDataObject):
-    globals: List[Dict[str, Any]]
-    detections: List[Dict[str, Any]]
-    data_models: List[Dict[str, Any]]
+    globals: List[ExecutionEnvComponent]
+    detections: List[ExecutionEnvComponent]
+    data_models: List[ExecutionEnvComponent]
 
 
 @dataclass(frozen=True)

@@ -64,8 +64,8 @@ class TestSerialization(unittest.TestCase):
         obj_a = ExecutionResult(
             url="https://en.wikipedia.org",
             output_mode=ExecutionMode.INLINE,
-            data=[
-                dict(p_row_id="1"),
+            matches=[
+                dict(input_id="1"),
             ],
             details=[
                 ExecutionDetails(

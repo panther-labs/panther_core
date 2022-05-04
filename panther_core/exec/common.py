@@ -19,7 +19,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import json
 
 from enum import Enum
+from typing import Any, Dict
 from dataclasses import dataclass, asdict
+
+# Aliases
+ExecutionMatch = Dict[str, any]
+ExecutionInputData = Dict[str, Any]
+ExecutionEnvComponent = Dict[str, Any]
+
+LogEventInput = Dict[str, Any]
+CloudResourceInput = Dict[str, Any]
 
 
 @dataclass(frozen=True)

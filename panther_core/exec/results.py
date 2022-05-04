@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from typing import Optional, List, Dict
 from dataclasses import dataclass
 
-from .common import _BaseDataObject, ExecutionMode
+from .common import _BaseDataObject, ExecutionMode, ExecutionMatch
 
 
 @dataclass(frozen=True)
@@ -74,7 +74,7 @@ class ExecutionDetails(_BaseDataObject):
 @dataclass(frozen=True)
 class ExecutionResult(_BaseDataObject):
     url: Optional[str]
-    data: Optional[List[Dict[str, any]]]
+    matches: Optional[List[ExecutionMatch]]
     details: List[ExecutionDetails]
     output_mode: ExecutionMode
 
@@ -87,9 +87,9 @@ class ExecutionResult(_BaseDataObject):
 
         return cls(
             url=data['url'],
-            data=data['data'],
-            output_mode=ExecutionMode(data['output_mode']),
+            matches=data['matches'],
             details=details,
+            output_mode=ExecutionMode(data['output_mode']),
         )
 
 
