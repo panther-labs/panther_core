@@ -92,7 +92,3 @@ class ExecutionResult(_BaseDataObject):
             output_mode=ExecutionMode(data['output_mode']),
         )
 
-
-@dataclass(frozen=True)
-class ExecutionMatch(_BaseDataObject):
-    input_id: str
