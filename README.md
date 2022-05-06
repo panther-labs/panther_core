@@ -10,7 +10,7 @@
 </p>
 
 <p align="center">
-  <a href="https://circleci.com/gh/panther-labs/panther_analysis_tool"><img src="https://circleci.com/gh/panther-labs/panther_core.svg?style=svg" alt="CircleCI"/></a>
+  <a href="https://circleci.com/gh/panther-labs/panther_core"><img src="https://circleci.com/gh/panther-labs/panther_core.svg?style=svg" alt="CircleCI"/></a>
 </p>
 
 ---
@@ -47,10 +47,11 @@ If you would rather use the `panther_core` outside of the virtual environment, i
 $ make deps
 $ pip3 install -e .
 ```
+
 # Contributing
 
-We welcome all contributions! Please read the [contributing guidelines](https://github.com/panther-labs/panther-analysis/blob/master/CONTRIBUTING.md) before submitting pull requests. [Instructions for opening a pull request](https://docs.github.com/en/github/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request) from your fork of the repo can be found on Github.
+We welcome all contributions! Please read the [contributing guidelines](https://github.com/panther-labs/panther_core/blob/master/CONTRIBUTING.md) before submitting pull requests. [Instructions for opening a pull request](https://docs.github.com/en/github/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request) from your fork of the repo can be found on Github.
 
 ## License
 
-This repository is licensed under the AGPL-3.0 [license](https://github.com/panther-labs/panther-analysis/blob/master/LICENSE).
+This repository is licensed under the AGPL-3.0 [license](https://github.com/panther-labs/panther_core/blob/master/LICENSE).
