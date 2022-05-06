@@ -57,17 +57,5 @@ def store_modules(path: str, body: str) -> None:
         py_file.write(body)
 
 
-def get_client(aws_profile: str, service: str) -> boto3.client:
-    # optionally set env variable for profile passed as argument
-    if aws_profile is not None:
-        logging.info("Using AWS profile: %s", aws_profile)
-        set_env("AWS_PROFILE", aws_profile)
-        sess = boto3.Session(profile_name=aws_profile)
-        client = sess.client(service)
-    else:
-        client = boto3.client(service)
-    return client
-
-
 def set_env(key: str, value: str) -> None:
     os.environ[key] = value
