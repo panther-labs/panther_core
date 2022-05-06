@@ -55,7 +55,3 @@ def store_modules(path: str, body: str) -> None:
     Path(os.path.dirname(path)).mkdir(parents=True, exist_ok=True)
     with open(path, "w") as py_file:
         py_file.write(body)
-
-
-def set_env(key: str, value: str) -> None:
-    os.environ[key] = value
