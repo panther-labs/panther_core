@@ -21,7 +21,7 @@ with open('requirements.txt') as f:
 setup(
     name='panther_core',
     packages=['panther_core'],
-    version='0.14.1',
+    version='0.0.1',
     license='AGPL-3.0',
     description=
     'Panther command line interface for writing, testing, and packaging policies/rules.',
