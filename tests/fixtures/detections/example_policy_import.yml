@@ -1,0 +1,14 @@
+AnalysisType: policy
+Filename: example_policy_import.py
+DisplayName: Example with Import
+Severity: Info
+PolicyID: AWS.Import
+Enabled: true
+ResourceTypes:
+  - AWS.CloudTrail
+Tests:
+  -
+    Name: Always Returns True
+    ExpectedResult: true
+    Resource:
+      Key: value
