@@ -1,3 +1,4 @@
+include requirements.txt
 include panther_core/exec/__init__.py
 include panther_core/exec/common.py
 include panther_core/exec/results.py
