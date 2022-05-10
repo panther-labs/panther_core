@@ -19,22 +19,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import json
 import unittest
 
-from ..common import ExecutionMode
+from panther_core.exec.common import ExecutionMode
 
-from ..task import (
-    ExecutionTask,
-    ExecutionTaskInput,
-    ExecutionTaskOptions,
-    ExecutionTaskEnv,
+from panther_core.exec.task import (
     ExecutionEnv,
+    ExecutionTask,
+    ExecutionTaskEnv,
+    ExecutionTaskInput,
     ExecutionTaskOutput,
+    ExecutionTaskOptions,
 )
 
-from ..results import (
+from panther_core.exec.results import (
+    ExecutionOutput,
     ExecutionResult,
     ExecutionDetails,
+    ExecutionAuxFunctionDetails,
     ExecutionDetailsAuxFunctions,
-    ExecutionAuxFunctionDetails
 )
 
 
@@ -98,41 +99,41 @@ class TestSerialization(unittest.TestCase):
         obj_a = ExecutionResult(
             url="https://en.wikipedia.org",
             output_mode=ExecutionMode.INLINE,
-            matches=[
-                dict(input_id="1"),
-            ],
-            details=[
-                ExecutionDetails(
+            data=[
+                ExecutionOutput(
                     input_id="xyz",
-                    aux_functions=ExecutionDetailsAuxFunctions(
-                        title=ExecutionAuxFunctionDetails(
-                            error=None,
-                            output="boop",
-                        ),
-                        runbook=ExecutionAuxFunctionDetails(
-                            error=None,
-                            output="boop",
-                        ),
-                        severity=ExecutionAuxFunctionDetails(
-                            error=None,
-                            output="boop",
-                        ),
-                        reference=ExecutionAuxFunctionDetails(
-                            error=None,
-                            output="boop",
-                        ),
-                        description=ExecutionAuxFunctionDetails(
-                            error=None,
-                            output="boop",
-                        ),
-                        destinations=ExecutionAuxFunctionDetails(
-                            error=None,
-                            output="boop",
-                        ),
-                        alert_context=ExecutionAuxFunctionDetails(
-                            error=None,
-                            output="boop",
-                        ),
+                    match=dict(input_id="1"),
+                    details=ExecutionDetails(
+                        aux_functions=ExecutionDetailsAuxFunctions(
+                            title=ExecutionAuxFunctionDetails(
+                                error=None,
+                                output="boop",
+                            ),
+                            runbook=ExecutionAuxFunctionDetails(
+                                error=None,
+                                output="boop",
+                            ),
+                            severity=ExecutionAuxFunctionDetails(
+                                error=None,
+                                output="boop",
+                            ),
+                            reference=ExecutionAuxFunctionDetails(
+                                error=None,
+                                output="boop",
+                            ),
+                            description=ExecutionAuxFunctionDetails(
+                                error=None,
+                                output="boop",
+                            ),
+                            destinations=ExecutionAuxFunctionDetails(
+                                error=None,
+                                output="boop",
+                            ),
+                            alert_context=ExecutionAuxFunctionDetails(
+                                error=None,
+                                output="boop",
+                            ),
+                        )
                     )
                 )
             ]

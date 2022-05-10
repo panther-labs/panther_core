@@ -60,35 +60,43 @@ class ExecutionDetailsAuxFunctions(_BaseDataObject):
 
 @dataclass(frozen=True)
 class ExecutionDetails(_BaseDataObject):
-    input_id: str
     aux_functions: ExecutionDetailsAuxFunctions
 
     @classmethod
     def from_json(cls, data: Dict[str, any]):
         return cls(
-            input_id=data['input_id'],
             aux_functions=ExecutionDetailsAuxFunctions.from_json(data['aux_functions']),
         )
 
+@dataclass(frozen=True)
+class ExecutionOutput(_BaseDataObject):
+    input_id: str
+    match: Optional[ExecutionMatch]
+    details: Optional[ExecutionDetails]
+
+    @classmethod
+    def from_json(cls, data: Dict[str, any]):
+        return cls(
+            match=data['match'],
+            details=ExecutionDetails.from_json(data['details']),
+            input_id=data['input_id'],
+        )
 
 @dataclass(frozen=True)
 class ExecutionResult(_BaseDataObject):
     url: Optional[str]
-    matches: Optional[List[ExecutionMatch]]
-    details: List[ExecutionDetails]
+    data: Optional[List[ExecutionOutput]]
     output_mode: ExecutionMode
 
     @classmethod
     def from_json(cls, data: Dict[str, any]):
-        details = []
-        for json_str in data['details']:
-            obj = ExecutionDetails.from_json(json_str)
-            details.append(obj)
+        outputs = []
+        for json_str in data['data']:
+            obj = ExecutionOutput.from_json(json_str)
+            outputs.append(obj)
 
         return cls(
             url=data['url'],
-            matches=data['matches'],
-            details=details,
+            data=outputs,
             output_mode=ExecutionMode(data['output_mode']),
         )
-

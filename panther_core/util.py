@@ -22,8 +22,6 @@ from importlib import util as import_util
 from pathlib import Path
 from typing import Any
 
-import boto3
-
 
 def allowed_char(char: str) -> bool:
     """Return true if the character is part of a valid ID."""
