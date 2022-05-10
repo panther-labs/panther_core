@@ -50,7 +50,7 @@ class TestSerialization(unittest.TestCase):
         obj = ExecutionTaskInput(
             url=None,
             mode=ExecutionMode.INLINE,
-            rows=[dict(xyz=1), dict(xyz=2)],
+            data=[dict(xyz=1), dict(xyz=2)],
             input_id_field="xyz",
         )
 
@@ -60,7 +60,7 @@ class TestSerialization(unittest.TestCase):
                 dict(
                     mode="INLINE",
                     url=None,
-                    rows=[dict(xyz=1), dict(xyz=2)],
+                    data=[dict(xyz=1), dict(xyz=2)],
                     input_id_field="xyz",
                 )
             )
@@ -72,6 +72,8 @@ class TestSerialization(unittest.TestCase):
                 mode=ExecutionMode.INLINE,
                 url=None,
                 env=ExecutionEnv(
+                    mocks=[dict(id="a")],
+                    outputs=[dict(id="b")],
                     globals=[dict(id="a")],
                     detections=[dict(id="b")],
                     data_models=[],
@@ -80,7 +82,7 @@ class TestSerialization(unittest.TestCase):
             input=ExecutionTaskInput(
                 url=None,
                 mode=ExecutionMode.INLINE,
-                rows=[],
+                data=[],
                 input_id_field="some_field",
             ),
             output=ExecutionTaskOutput(
