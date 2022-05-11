@@ -17,13 +17,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 import json
-
+from dataclasses import asdict, dataclass
 from enum import Enum
-from typing import Any, Dict
-from dataclasses import dataclass, asdict
+from typing import Any, Dict, List, Optional
 
 # Aliases
-ExecutionMatch = Dict[str, any]
 ExecutionInputData = Dict[str, Any]
 ExecutionEnvComponent = Dict[str, Any]
 

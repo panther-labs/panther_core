@@ -108,30 +108,37 @@ class TestSerialization(unittest.TestCase):
                     details=ExecutionDetails(
                         aux_functions=ExecutionDetailsAuxFunctions(
                             title=ExecutionAuxFunctionDetails(
+                                defined=True,
                                 error=None,
                                 output="boop",
                             ),
                             runbook=ExecutionAuxFunctionDetails(
+                                defined=True,
                                 error=None,
                                 output="boop",
                             ),
                             severity=ExecutionAuxFunctionDetails(
+                                defined=True,
                                 error=None,
                                 output="boop",
                             ),
                             reference=ExecutionAuxFunctionDetails(
+                                defined=True,
                                 error=None,
                                 output="boop",
                             ),
                             description=ExecutionAuxFunctionDetails(
+                                defined=True,
                                 error=None,
                                 output="boop",
                             ),
                             destinations=ExecutionAuxFunctionDetails(
+                                defined=True,
                                 error=None,
                                 output="boop",
                             ),
                             alert_context=ExecutionAuxFunctionDetails(
+                                defined=True,
                                 error=None,
                                 output="boop",
                             ),
