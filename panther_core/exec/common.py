@@ -44,12 +44,13 @@ class ExecutionMatch:
     eventId: Optional[str] = None
     replayId: Optional[str] = None
     # optional dynamic fields
-    alert_context: Optional[str] = None
+    alertContext: Optional[str] = None
     description: Optional[str] = None
     destinations: Optional[List[str]] = None
     severity: Optional[str] = None
     reference: Optional[str] = None
     runbook: Optional[str] = None
+    title: Optional[str] = None
 
 
 @dataclass(frozen=True)
