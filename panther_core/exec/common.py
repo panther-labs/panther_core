@@ -37,6 +37,7 @@ class ExecutionMatch:
     detectionVersion: str
     detectionTags: List[str]
     detectionReports: Dict[str, List[str]]
+    detectionSeverity: str
     dedupString: str
     dedupPeriodMins: int
     event: Dict[str, Any]
