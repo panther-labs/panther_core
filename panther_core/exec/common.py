@@ -41,15 +41,15 @@ class ExecutionMatch:
     dedupPeriodMins: int
     event: Dict[str, Any]
     # one of these will be set
-    eventId: Optional[str]
-    replayId: Optional[str]
+    eventId: Optional[str] = None
+    replayId: Optional[str] = None
     # optional dynamic fields
-    alert_context: Optional[str]
-    description: Optional[str]
-    destinations: Optional[List[str]]
-    severity: Optional[str]
-    reference: Optional[str]
-    runbook: Optional[str]
+    alert_context: Optional[str] = None
+    description: Optional[str] = None
+    destinations: Optional[List[str]] = None
+    severity: Optional[str] = None
+    reference: Optional[str] = None
+    runbook: Optional[str] = None
 
 
 @dataclass(frozen=True)
