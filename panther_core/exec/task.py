@@ -32,7 +32,7 @@ class ExecutionTaskInput(_BaseDataObject):
 
     mode: ExecutionMode
     url: Optional[str]
-    rows: List[ExecutionInputData]
+    data: List[ExecutionInputData]
     input_id_field: str
 
     @classmethod
@@ -40,7 +40,7 @@ class ExecutionTaskInput(_BaseDataObject):
         return cls(
             mode=ExecutionMode(data['mode']),
             url=data['url'],
-            rows=data['rows'],
+            data=data['data'],
             input_id_field=data['input_id_field'],
         )
 
@@ -49,7 +49,7 @@ class ExecutionTaskInput(_BaseDataObject):
         return cls(
             url=None,
             mode=ExecutionMode.INLINE,
-            rows=resources,
+            data=resources,
             input_id_field=cls._resource_input_id,
         )
 
@@ -58,7 +58,7 @@ class ExecutionTaskInput(_BaseDataObject):
         return cls(
             url=None,
             mode=ExecutionMode.INLINE,
-            rows=events,
+            data=events,
             input_id_field=cls._event_input_id,
         )
 
@@ -96,6 +96,8 @@ class ExecutionTaskOptions(_BaseDataObject):
 
 @dataclass(frozen=True)
 class ExecutionEnv(_BaseDataObject):
+    mocks: List[ExecutionEnvComponent]
+    outputs: List[ExecutionEnvComponent]
     globals: List[ExecutionEnvComponent]
     detections: List[ExecutionEnvComponent]
     data_models: List[ExecutionEnvComponent]
@@ -103,6 +105,8 @@ class ExecutionEnv(_BaseDataObject):
     @classmethod
     def from_json(cls, data: Dict[str, any]):
         return cls(
+            mocks=data['mocks'],
+            outputs=data['outputs'],
             globals=data['globals'],
             detections=data['detections'],
             data_models=data['data_models'],
