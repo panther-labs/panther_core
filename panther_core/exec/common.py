@@ -30,6 +30,23 @@ ExecutionEnvComponent = Dict[str, Any]
 LogEventInput = Dict[str, Any]
 CloudResourceInput = Dict[str, Any]
 
+@dataclass(frozen=True)
+class ExecutionMatch:
+    # required for all matches
+    alertType: str
+    dedupString: str
+    event: Dict[str, Any]
+    # one of these will be set
+    eventId: Optional[str]
+    replayId: Optional[str]
+    # optional dynamic fields
+    alert_context: Optional[str]
+    description: Optional[str]
+    destinations: Optional[List[str]]
+    severity: Optional[str]
+    reference: Optional[str]
+    runbook: Optional[str]
+
 
 @dataclass(frozen=True)
 class _BaseDataObject:

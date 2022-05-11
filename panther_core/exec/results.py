@@ -24,12 +24,14 @@ from .common import _BaseDataObject, ExecutionMode, ExecutionMatch
 
 @dataclass(frozen=True)
 class ExecutionAuxFunctionDetails(_BaseDataObject):
+    defined: bool
     error: Optional[str]
     output: Optional[str]
 
     @classmethod
     def from_json(cls, data: Dict[str, any]):
         return cls(
+            defined=data['defined'],
             error=data['error'],
             output=data['output'],
         )
