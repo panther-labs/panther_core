@@ -34,7 +34,13 @@ CloudResourceInput = Dict[str, Any]
 class ExecutionMatch:
     # required for all matches
     alertType: str
+    detectionType: str
+    detectionId: str
+    detectionVersion: str
+    detectionTags: List[str]
+    detectionReports: Dict[str, List[str]]
     dedupString: str
+    dedupPeriodMins: int
     event: Dict[str, Any]
     # one of these will be set
     eventId: Optional[str]
