@@ -23,7 +23,7 @@ from .common import ExecutionMatch, ExecutionMode, _BaseDataObject
 
 @dataclass(frozen=True)
 class ExecutionPrimaryFunctionDetails(_BaseDataObject):
-    error: Optional[str] = None
+    error: Optional[Exception] = None
     output: Optional[bool] = None
 
     @classmethod
@@ -48,7 +48,7 @@ class ExecutionDetailsPrimaryFunctions(_BaseDataObject):
 @dataclass(frozen=True)
 class ExecutionAuxFunctionDetails(_BaseDataObject):
     defined: bool
-    error: Optional[str] = None
+    error: Optional[Exception] = None
     output: Optional[str] = None
 
     @classmethod
