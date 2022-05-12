@@ -35,9 +35,9 @@ class ExecutionTaskInput(_BaseDataObject):
     _resource_input_id = "resourceId"
 
     mode: ExecutionMode
-    url: Optional[str]
     data: List[ExecutionInputData]
     input_id_field: str
+    url: Optional[str] = None
 
     @classmethod
     def from_json(cls, data: Dict[str, any]):
@@ -70,7 +70,7 @@ class ExecutionTaskInput(_BaseDataObject):
 @dataclass(frozen=True)
 class ExecutionTaskOutput(_BaseDataObject):
     mode: ExecutionMode
-    url: Optional[str]
+    url: Optional[str] = None
 
     @classmethod
     def from_json(cls, data: Dict[str, any]):
@@ -120,8 +120,8 @@ class ExecutionEnv(_BaseDataObject):
 @dataclass(frozen=True)
 class ExecutionTaskEnv(_BaseDataObject):
     mode: ExecutionMode
-    url: Optional[str]
-    env: Optional[ExecutionEnv]
+    url: Optional[str] = None
+    env: Optional[ExecutionEnv] = None
 
     @classmethod
     def from_json(cls, data: Dict[str, any]):
