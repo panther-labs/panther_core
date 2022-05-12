@@ -25,8 +25,6 @@ from pathlib import Path
 from types import ModuleType
 from typing import List, Optional, Type
 
-from .policy import TYPE_POLICY, ERROR_TYPE_POLICY
-from .rule import TYPE_RULE, ERROR_TYPE_RULE, ERROR_TYPE_SCHEDULED_RULE
 from .util import id_to_path, import_file_as_module, store_modules
 
 # Temporary alias for compatibility

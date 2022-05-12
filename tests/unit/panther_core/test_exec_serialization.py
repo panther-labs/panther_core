@@ -48,7 +48,6 @@ class TestSerialization(unittest.TestCase):
 
     def test_task_input(self) -> None:
         obj = ExecutionTaskInput(
-            url=None,
             mode=ExecutionMode.INLINE,
             data=[dict(xyz=1), dict(xyz=2)],
             input_id_field="xyz",
@@ -59,9 +58,9 @@ class TestSerialization(unittest.TestCase):
             json.dumps(
                 dict(
                     mode="INLINE",
-                    url=None,
                     data=[dict(xyz=1), dict(xyz=2)],
                     input_id_field="xyz",
+                    url=None,
                 )
             )
         )
