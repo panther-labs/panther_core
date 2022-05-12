@@ -43,7 +43,7 @@ class ExecutionTaskInput(_BaseDataObject):
     def from_json(cls, data: Dict[str, any]):
         return cls(
             mode=ExecutionMode(data['mode']),
-            url=data['url'],
+            url=data.get('url'),
             data=data['data'],
             input_id_field=data['input_id_field'],
         )
@@ -76,7 +76,7 @@ class ExecutionTaskOutput(_BaseDataObject):
     def from_json(cls, data: Dict[str, any]):
         return cls(
             mode=ExecutionMode(data['mode']),
-            url=data['url'],
+            url=data.get('url'),
         )
 
     @classmethod
@@ -109,11 +109,11 @@ class ExecutionEnv(_BaseDataObject):
     @classmethod
     def from_json(cls, data: Dict[str, any]):
         return cls(
-            mocks=data['mocks'],
-            outputs=data['outputs'],
-            globals=data['globals'],
-            detections=data['detections'],
-            data_models=data['data_models'],
+            mocks=data.get('mocks', []),
+            outputs=data.get('outputs', []),
+            globals=data.get('globals', []),
+            detections=data.get('detections', []),
+            data_models=data.get('data_models', []),
         )
 
 
@@ -127,8 +127,8 @@ class ExecutionTaskEnv(_BaseDataObject):
     def from_json(cls, data: Dict[str, any]):
         return cls(
             mode=ExecutionMode(data['mode']),
-            url=data['url'],
-            env=ExecutionEnv.from_json(data['env']),
+            url=data.get('url'),
+            env=ExecutionEnv.from_json(data.get('env', {})),
         )
 
     @classmethod
