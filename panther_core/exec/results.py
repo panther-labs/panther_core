@@ -62,6 +62,7 @@ class ExecutionAuxFunctionDetails(_BaseDataObject):
 
 @dataclass(frozen=True)
 class ExecutionDetailsAuxFunctions(_BaseDataObject):
+    dedup: ExecutionAuxFunctionDetails
     title: ExecutionAuxFunctionDetails
     runbook: ExecutionAuxFunctionDetails
     severity: ExecutionAuxFunctionDetails
@@ -73,6 +74,7 @@ class ExecutionDetailsAuxFunctions(_BaseDataObject):
     @classmethod
     def from_json(cls, data: Dict[str, any]):
         return cls(
+            dedup=ExecutionAuxFunctionDetails.from_json(data['dedup']),
             title=ExecutionAuxFunctionDetails.from_json(data['title']),
             runbook=ExecutionAuxFunctionDetails.from_json(data['runbook']),
             severity=ExecutionAuxFunctionDetails.from_json(data['severity']),

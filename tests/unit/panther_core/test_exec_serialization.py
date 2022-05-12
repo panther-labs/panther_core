@@ -108,6 +108,11 @@ class TestSerialization(unittest.TestCase):
                     match=dict(input_id="1"),
                     details=ExecutionDetails(
                         aux_functions=ExecutionDetailsAuxFunctions(
+                            dedup=ExecutionAuxFunctionDetails(
+                                defined=True,
+                                error=None,
+                                output="boop",
+                            ),
                             title=ExecutionAuxFunctionDetails(
                                 defined=True,
                                 error=None,
