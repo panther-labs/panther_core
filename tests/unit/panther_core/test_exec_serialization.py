@@ -35,7 +35,9 @@ from panther_core.exec.results import (
     ExecutionResult,
     ExecutionDetails,
     ExecutionAuxFunctionDetails,
+    ExecutionPrimaryFunctionDetails,
     ExecutionDetailsAuxFunctions,
+    ExecutionDetailsPrimaryFunctions,
 )
 
 
@@ -141,6 +143,13 @@ class TestSerialization(unittest.TestCase):
                                 error=None,
                                 output="boop",
                             ),
+                        ),
+                        primary_functions=ExecutionDetailsPrimaryFunctions(
+                            rule=ExecutionPrimaryFunctionDetails(
+                                error=None,
+                                output=False,
+                            ),
+                            policy=ExecutionPrimaryFunctionDetails(),
                         )
                     )
                 )
@@ -148,5 +157,5 @@ class TestSerialization(unittest.TestCase):
         )
 
         obj_b = ExecutionResult.from_json(json.loads(obj_a.to_json()))
-
+        print(obj_b)
         self.assertEqual(obj_a, obj_b)
