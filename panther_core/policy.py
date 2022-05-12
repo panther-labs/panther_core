@@ -21,6 +21,7 @@ from collections.abc import Mapping
 from .rule import Detection
 
 TYPE_POLICY = "POLICY"
+ERROR_TYPE_POLICY = "POLICY_ERROR"
 
 
 class Policy(Detection):
