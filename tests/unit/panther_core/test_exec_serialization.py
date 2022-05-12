@@ -145,11 +145,10 @@ class TestSerialization(unittest.TestCase):
                             ),
                         ),
                         primary_functions=ExecutionDetailsPrimaryFunctions(
-                            rule=ExecutionPrimaryFunctionDetails(
+                            detection=ExecutionPrimaryFunctionDetails(
                                 error=None,
                                 output=False,
                             ),
-                            policy=ExecutionPrimaryFunctionDetails(),
                         )
                     )
                 )

@@ -36,14 +36,12 @@ class ExecutionPrimaryFunctionDetails(_BaseDataObject):
 
 @dataclass(frozen=True)
 class ExecutionDetailsPrimaryFunctions(_BaseDataObject):
-    rule: ExecutionPrimaryFunctionDetails
-    policy: ExecutionPrimaryFunctionDetails
+    detection: ExecutionPrimaryFunctionDetails
 
     @classmethod
     def from_json(cls, data: Dict[str, any]):
         return cls(
-            policy=ExecutionPrimaryFunctionDetails.from_json(data.get('policy', {})),
-            rule=ExecutionPrimaryFunctionDetails.from_json(data.get('rule', {})),
+            detection=ExecutionPrimaryFunctionDetails.from_json(data.get('detection', {})),
         )
 
 
