@@ -25,8 +25,8 @@ from .common import ExecutionMatch, ExecutionMode, _BaseDataObject
 @dataclass(frozen=True)
 class ExecutionAuxFunctionDetails(_BaseDataObject):
     defined: bool
-    error: Optional[str]
-    output: Optional[str]
+    error: Optional[str] = None
+    output: Optional[str] = None
 
     @classmethod
     def from_json(cls, data: Dict[str, any]):
@@ -73,8 +73,8 @@ class ExecutionDetails(_BaseDataObject):
 @dataclass(frozen=True)
 class ExecutionOutput(_BaseDataObject):
     input_id: str
-    match: Optional[ExecutionMatch]
-    details: Optional[ExecutionDetails]
+    match: Optional[ExecutionMatch] = None
+    details: Optional[ExecutionDetails] = None
 
     @classmethod
     def from_json(cls, data: Dict[str, any]):
@@ -86,9 +86,9 @@ class ExecutionOutput(_BaseDataObject):
 
 @dataclass(frozen=True)
 class ExecutionResult(_BaseDataObject):
-    url: Optional[str]
-    data: Optional[List[ExecutionOutput]]
     output_mode: ExecutionMode
+    url: Optional[str] = None
+    data: Optional[List[ExecutionOutput]] = None
 
     @classmethod
     def from_json(cls, data: Dict[str, any]):
