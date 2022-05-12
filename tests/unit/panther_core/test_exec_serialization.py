@@ -156,5 +156,4 @@ class TestSerialization(unittest.TestCase):
         )
 
         obj_b = ExecutionResult.from_json(json.loads(obj_a.to_json()))
-        print(obj_b)
         self.assertEqual(obj_a, obj_b)
