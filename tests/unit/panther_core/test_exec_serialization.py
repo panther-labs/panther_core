@@ -35,7 +35,9 @@ from panther_core.exec.results import (
     ExecutionResult,
     ExecutionDetails,
     ExecutionAuxFunctionDetails,
+    ExecutionPrimaryFunctionDetails,
     ExecutionDetailsAuxFunctions,
+    ExecutionDetailsPrimaryFunctions,
 )
 
 
@@ -48,7 +50,6 @@ class TestSerialization(unittest.TestCase):
 
     def test_task_input(self) -> None:
         obj = ExecutionTaskInput(
-            url=None,
             mode=ExecutionMode.INLINE,
             data=[dict(xyz=1), dict(xyz=2)],
             input_id_field="xyz",
@@ -59,9 +60,9 @@ class TestSerialization(unittest.TestCase):
             json.dumps(
                 dict(
                     mode="INLINE",
-                    url=None,
                     data=[dict(xyz=1), dict(xyz=2)],
                     input_id_field="xyz",
+                    url=None,
                 )
             )
         )
@@ -107,33 +108,51 @@ class TestSerialization(unittest.TestCase):
                     match=dict(input_id="1"),
                     details=ExecutionDetails(
                         aux_functions=ExecutionDetailsAuxFunctions(
+                            dedup=ExecutionAuxFunctionDetails(
+                                defined=True,
+                                error=None,
+                                output="boop",
+                            ),
                             title=ExecutionAuxFunctionDetails(
+                                defined=True,
                                 error=None,
                                 output="boop",
                             ),
                             runbook=ExecutionAuxFunctionDetails(
+                                defined=True,
                                 error=None,
                                 output="boop",
                             ),
                             severity=ExecutionAuxFunctionDetails(
+                                defined=True,
                                 error=None,
                                 output="boop",
                             ),
                             reference=ExecutionAuxFunctionDetails(
+                                defined=True,
                                 error=None,
                                 output="boop",
                             ),
                             description=ExecutionAuxFunctionDetails(
+                                defined=True,
                                 error=None,
                                 output="boop",
                             ),
                             destinations=ExecutionAuxFunctionDetails(
+                                defined=True,
                                 error=None,
                                 output="boop",
                             ),
                             alert_context=ExecutionAuxFunctionDetails(
+                                defined=True,
                                 error=None,
                                 output="boop",
+                            ),
+                        ),
+                        primary_functions=ExecutionDetailsPrimaryFunctions(
+                            detection=ExecutionPrimaryFunctionDetails(
+                                error=None,
+                                output=False,
                             ),
                         )
                     )
@@ -142,5 +161,4 @@ class TestSerialization(unittest.TestCase):
         )
 
         obj_b = ExecutionResult.from_json(json.loads(obj_a.to_json()))
-
         self.assertEqual(obj_a, obj_b)

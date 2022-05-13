@@ -16,12 +16,16 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-from typing import Optional, List, Dict
 from dataclasses import dataclass
+from typing import Dict, List, Optional
 
 from .common import (
-    _BaseDataObject, ExecutionMode, ExecutionEnvComponent,
-    ExecutionInputData, LogEventInput, CloudResourceInput
+    CloudResourceInput,
+    ExecutionEnvComponent,
+    ExecutionInputData,
+    ExecutionMode,
+    LogEventInput,
+    _BaseDataObject,
 )
 
 
@@ -31,15 +35,15 @@ class ExecutionTaskInput(_BaseDataObject):
     _resource_input_id = "resourceId"
 
     mode: ExecutionMode
-    url: Optional[str]
     data: List[ExecutionInputData]
     input_id_field: str
+    url: Optional[str] = None
 
     @classmethod
     def from_json(cls, data: Dict[str, any]):
         return cls(
             mode=ExecutionMode(data['mode']),
-            url=data['url'],
+            url=data.get('url'),
             data=data['data'],
             input_id_field=data['input_id_field'],
         )
@@ -66,13 +70,13 @@ class ExecutionTaskInput(_BaseDataObject):
 @dataclass(frozen=True)
 class ExecutionTaskOutput(_BaseDataObject):
     mode: ExecutionMode
-    url: Optional[str]
+    url: Optional[str] = None
 
     @classmethod
     def from_json(cls, data: Dict[str, any]):
         return cls(
             mode=ExecutionMode(data['mode']),
-            url=data['url'],
+            url=data.get('url'),
         )
 
     @classmethod
@@ -105,26 +109,26 @@ class ExecutionEnv(_BaseDataObject):
     @classmethod
     def from_json(cls, data: Dict[str, any]):
         return cls(
-            mocks=data['mocks'],
-            outputs=data['outputs'],
-            globals=data['globals'],
-            detections=data['detections'],
-            data_models=data['data_models'],
+            mocks=data.get('mocks', []),
+            outputs=data.get('outputs', []),
+            globals=data.get('globals', []),
+            detections=data.get('detections', []),
+            data_models=data.get('data_models', []),
         )
 
 
 @dataclass(frozen=True)
 class ExecutionTaskEnv(_BaseDataObject):
     mode: ExecutionMode
-    url: Optional[str]
-    env: Optional[ExecutionEnv]
+    url: Optional[str] = None
+    env: Optional[ExecutionEnv] = None
 
     @classmethod
     def from_json(cls, data: Dict[str, any]):
         return cls(
             mode=ExecutionMode(data['mode']),
-            url=data['url'],
-            env=ExecutionEnv.from_json(data['env']),
+            url=data.get('url'),
+            env=ExecutionEnv.from_json(data.get('env', {})),
         )
 
     @classmethod

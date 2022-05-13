@@ -16,20 +16,45 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-from typing import Optional, List, Dict
 from dataclasses import dataclass
+from typing import Dict, List, Optional
 
-from .common import _BaseDataObject, ExecutionMode, ExecutionMatch
-
+from .common import ExecutionMatch, ExecutionMode, _BaseDataObject
 
 @dataclass(frozen=True)
-class ExecutionAuxFunctionDetails(_BaseDataObject):
-    error: Optional[str]
-    output: Optional[str]
+class ExecutionPrimaryFunctionDetails(_BaseDataObject):
+    error: Optional[str] = None
+    output: Optional[bool] = None
 
     @classmethod
     def from_json(cls, data: Dict[str, any]):
         return cls(
+            error=data.get('error'),
+            output=data.get('output'),
+        )
+
+
+@dataclass(frozen=True)
+class ExecutionDetailsPrimaryFunctions(_BaseDataObject):
+    detection: ExecutionPrimaryFunctionDetails
+
+    @classmethod
+    def from_json(cls, data: Dict[str, any]):
+        return cls(
+            detection=ExecutionPrimaryFunctionDetails.from_json(data.get('detection', {})),
+        )
+
+
+@dataclass(frozen=True)
+class ExecutionAuxFunctionDetails(_BaseDataObject):
+    defined: bool
+    error: Optional[str] = None
+    output: Optional[str] = None
+
+    @classmethod
+    def from_json(cls, data: Dict[str, any]):
+        return cls(
+            defined=data['defined'],
             error=data['error'],
             output=data['output'],
         )
@@ -37,6 +62,7 @@ class ExecutionAuxFunctionDetails(_BaseDataObject):
 
 @dataclass(frozen=True)
 class ExecutionDetailsAuxFunctions(_BaseDataObject):
+    dedup: ExecutionAuxFunctionDetails
     title: ExecutionAuxFunctionDetails
     runbook: ExecutionAuxFunctionDetails
     severity: ExecutionAuxFunctionDetails
@@ -48,6 +74,7 @@ class ExecutionDetailsAuxFunctions(_BaseDataObject):
     @classmethod
     def from_json(cls, data: Dict[str, any]):
         return cls(
+            dedup=ExecutionAuxFunctionDetails.from_json(data['dedup']),
             title=ExecutionAuxFunctionDetails.from_json(data['title']),
             runbook=ExecutionAuxFunctionDetails.from_json(data['runbook']),
             severity=ExecutionAuxFunctionDetails.from_json(data['severity']),
@@ -61,18 +88,24 @@ class ExecutionDetailsAuxFunctions(_BaseDataObject):
 @dataclass(frozen=True)
 class ExecutionDetails(_BaseDataObject):
     aux_functions: ExecutionDetailsAuxFunctions
+    primary_functions: ExecutionDetailsPrimaryFunctions
+    input_error: Optional[str] = None
+    setup_error: Optional[str] = None
 
     @classmethod
     def from_json(cls, data: Dict[str, any]):
         return cls(
+            input_error=data.get('input_exception'),
+            setup_error=data.get('setup_exception'),
             aux_functions=ExecutionDetailsAuxFunctions.from_json(data['aux_functions']),
+            primary_functions=ExecutionDetailsPrimaryFunctions.from_json(data['primary_functions']),
         )
 
 @dataclass(frozen=True)
 class ExecutionOutput(_BaseDataObject):
     input_id: str
-    match: Optional[ExecutionMatch]
-    details: Optional[ExecutionDetails]
+    match: Optional[ExecutionMatch] = None
+    details: Optional[ExecutionDetails] = None
 
     @classmethod
     def from_json(cls, data: Dict[str, any]):
@@ -84,9 +117,9 @@ class ExecutionOutput(_BaseDataObject):
 
 @dataclass(frozen=True)
 class ExecutionResult(_BaseDataObject):
-    url: Optional[str]
-    data: Optional[List[ExecutionOutput]]
     output_mode: ExecutionMode
+    url: Optional[str] = None
+    data: Optional[List[ExecutionOutput]] = None
 
     @classmethod
     def from_json(cls, data: Dict[str, any]):
