@@ -20,23 +20,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import unittest
 
-from panther_core.detection import DetectionResult
 from panther_core.policy import TYPE_POLICY
-from panther_core.rule import Rule, TYPE_RULE, ERROR_TYPE_RULE
+from panther_core.rule import TYPE_RULE, ERROR_TYPE_RULE
 from panther_core.exec.results import ExecutionOutput, ExecutionMatch, ExecutionDetails, \
     ExecutionDetailsPrimaryFunctions, ExecutionPrimaryFunctionDetails, ExecutionDetailsAuxFunctions, \
     ExecutionAuxFunctionDetails
 
-from panther_core.testing import FunctionTestResult, TestError, TestSpecification, \
-    TestExpectations, TestCaseEvaluator, TestResult, TestResultsPerFunction, TestCaseEvaluatorExec
+from panther_core.testing_exec_output import FunctionTestResult, TestError, TestSpecification, \
+    TestExpectations, TestResult, TestResultsPerFunction, TestCaseEvaluator
 
-TEST_RULE = {
-    'body': 'def rule(_):\n\treturn True',
-    'id': 'test-id',
-    'severity': 'INFO',
-    'type': TYPE_RULE,
-    'versionId': 'my-version',
-}
+TYPE_ERR_STRING = repr(TypeError('wrong type'))
+
 
 class TestTestCaseEvaluator2(unittest.TestCase):
 
@@ -86,7 +80,7 @@ class TestTestCaseEvaluator2(unittest.TestCase):
                 destinationsFunction=None
             )
         )
-        actual = TestCaseEvaluatorExec(spec=spec, exec_output=exec_output).interpret()
+        actual = TestCaseEvaluator(spec=spec, exec_output=exec_output).interpret()
         self.assertEqual(expected, actual)
 
     def test_interpret_passing_test_expected_to_trigger_alert(self) -> None:
@@ -147,7 +141,7 @@ class TestTestCaseEvaluator2(unittest.TestCase):
                 destinationsFunction=None
             )
         )
-        actual = TestCaseEvaluatorExec(spec=spec, exec_output=exec_output).interpret()
+        actual = TestCaseEvaluator(spec=spec, exec_output=exec_output).interpret()
         self.assertEqual(expected, actual)
 
     def test_interpret_failing_test_expected_to_trigger_alert(self) -> None:
@@ -168,7 +162,7 @@ class TestTestCaseEvaluator2(unittest.TestCase):
         exec_details = ExecutionDetails(
             primary_functions=ExecutionDetailsPrimaryFunctions(
                 detection=ExecutionPrimaryFunctionDetails(
-                    error=TypeError('wrong type'),
+                    error=TYPE_ERR_STRING,
                     output=None
                 )
             ),
@@ -198,7 +192,7 @@ class TestTestCaseEvaluator2(unittest.TestCase):
             passed=False,
             trigger_alert=True,
             functions=TestResultsPerFunction(
-                detectionFunction=FunctionTestResult(output=None, error=TestError(message='TypeError: wrong type'), matched=False),
+                detectionFunction=FunctionTestResult(output=None, error=TestError(message=TYPE_ERR_STRING), matched=False),
                 titleFunction=None,
                 dedupFunction=None,
                 alertContextFunction=None,
@@ -209,7 +203,7 @@ class TestTestCaseEvaluator2(unittest.TestCase):
                 destinationsFunction=None
             )
         )
-        actual = TestCaseEvaluatorExec(spec=spec, exec_output=exec_output).interpret()
+        actual = TestCaseEvaluator(spec=spec, exec_output=exec_output).interpret()
         self.assertEqual(expected, actual)
     
     def test_interpret_failing_test_expected_to_match_aux_function_error(self) -> None:
@@ -236,7 +230,7 @@ class TestTestCaseEvaluator2(unittest.TestCase):
             aux_functions=ExecutionDetailsAuxFunctions(
                 title=ExecutionAuxFunctionDetails(
                     defined=True,
-                    error=TypeError('wrong type')
+                    error=TYPE_ERR_STRING
                 ),
                 runbook=ExecutionAuxFunctionDetails(defined=False),
                 severity=ExecutionAuxFunctionDetails(defined=False),
@@ -263,7 +257,7 @@ class TestTestCaseEvaluator2(unittest.TestCase):
             trigger_alert=True,
             functions=TestResultsPerFunction(
                 detectionFunction=FunctionTestResult(output='true', error=None, matched=True),
-                titleFunction=FunctionTestResult(output=None, error=TestError(message='TypeError: wrong type'), matched=False),
+                titleFunction=FunctionTestResult(output=None, error=TestError(message=TYPE_ERR_STRING), matched=False),
                 dedupFunction=None,
                 alertContextFunction=None,
                 descriptionFunction=None,
@@ -273,7 +267,7 @@ class TestTestCaseEvaluator2(unittest.TestCase):
                 destinationsFunction=None
             )
         )
-        actual = TestCaseEvaluatorExec(spec=spec, exec_output=exec_output).interpret()
+        actual = TestCaseEvaluator(spec=spec, exec_output=exec_output).interpret()
         self.assertEqual(expected, actual)
 
     def test_interpret_failing_test_expected_to_trigger_alert_detection_error(self) -> None:
@@ -294,7 +288,7 @@ class TestTestCaseEvaluator2(unittest.TestCase):
         exec_details = ExecutionDetails(
             primary_functions=ExecutionDetailsPrimaryFunctions(
                 detection=ExecutionPrimaryFunctionDetails(
-                    error=TypeError('wrong type'),
+                    error=TYPE_ERR_STRING,
                     output=None,
                 )
             ),
@@ -324,7 +318,7 @@ class TestTestCaseEvaluator2(unittest.TestCase):
             passed=False,
             trigger_alert=True,
             functions=TestResultsPerFunction(
-                detectionFunction=FunctionTestResult(output=None, error=TestError(message='TypeError: wrong type'), matched=False),
+                detectionFunction=FunctionTestResult(output=None, error=TestError(message=TYPE_ERR_STRING), matched=False),
                 titleFunction=None,
                 dedupFunction=None,
                 alertContextFunction=None,
@@ -335,7 +329,7 @@ class TestTestCaseEvaluator2(unittest.TestCase):
                 destinationsFunction=None
             )
         )
-        actual = TestCaseEvaluatorExec(spec=spec, exec_output=exec_output).interpret()
+        actual = TestCaseEvaluator(spec=spec, exec_output=exec_output).interpret()
         self.assertEqual(expected, actual)
 
     def test_interpret_failing_test_expected_to_trigger_alert_with_aux_exception(self) -> None:
@@ -362,25 +356,25 @@ class TestTestCaseEvaluator2(unittest.TestCase):
             aux_functions=ExecutionDetailsAuxFunctions(
                 title=ExecutionAuxFunctionDetails(
                     defined=False,
-                    error=TypeError('wrong type')
+                    error=TYPE_ERR_STRING
                 ),
                 runbook=ExecutionAuxFunctionDetails(
                     defined=True,
-                    error=TypeError('wrong type')
+                    error=TYPE_ERR_STRING
 
                 ),
                 severity=ExecutionAuxFunctionDetails(
                     defined=False,
-                    error=TypeError('wrong type')
+                    error=TYPE_ERR_STRING
                 ),
                 reference=ExecutionAuxFunctionDetails(
                     defined=True,
-                    error=TypeError('wrong type')
+                    error=TYPE_ERR_STRING
                 ),
                 description=ExecutionAuxFunctionDetails(defined=False),
                 destinations=ExecutionAuxFunctionDetails(
                     defined=True,
-                    error=TypeError('wrong type')
+                    error=TYPE_ERR_STRING
                 ),
                 dedup=ExecutionAuxFunctionDetails(defined=False),
                 alert_context=ExecutionAuxFunctionDetails(defined=False)
@@ -412,7 +406,7 @@ class TestTestCaseEvaluator2(unittest.TestCase):
                 destinationsFunction=None,
             )
         )
-        actual = TestCaseEvaluatorExec(spec=spec, exec_output=exec_output).interpret()
+        actual = TestCaseEvaluator(spec=spec, exec_output=exec_output).interpret()
         self.assertEqual(expected, actual)
 
     def test_interpret_failing_test_policy_expected_to_trigger_alert_with_aux_exception(self) -> None:
@@ -439,25 +433,25 @@ class TestTestCaseEvaluator2(unittest.TestCase):
             aux_functions=ExecutionDetailsAuxFunctions(
                 title=ExecutionAuxFunctionDetails(
                     defined=False,
-                    error=TypeError('wrong type')
+                    error=TYPE_ERR_STRING
                 ),
                 runbook=ExecutionAuxFunctionDetails(
                     defined=True,
-                    error=TypeError('wrong type')
+                    error=TYPE_ERR_STRING
 
                 ),
                 severity=ExecutionAuxFunctionDetails(
                     defined=False,
-                    error=TypeError('wrong type')
+                    error=TYPE_ERR_STRING
                 ),
                 reference=ExecutionAuxFunctionDetails(
                     defined=True,
-                    error=TypeError('wrong type')
+                    error=TYPE_ERR_STRING
                 ),
                 description=ExecutionAuxFunctionDetails(defined=False),
                 destinations=ExecutionAuxFunctionDetails(
                     defined=True,
-                    error=TypeError('wrong type')
+                    error=TYPE_ERR_STRING
                 ),
                 dedup=ExecutionAuxFunctionDetails(defined=False),
                 alert_context=ExecutionAuxFunctionDetails(defined=False)
@@ -489,7 +483,7 @@ class TestTestCaseEvaluator2(unittest.TestCase):
                 destinationsFunction=None,
             )
         )
-        actual = TestCaseEvaluatorExec(spec=spec, exec_output=exec_output).interpret()
+        actual = TestCaseEvaluator(spec=spec, exec_output=exec_output).interpret()
         self.assertEqual(expected, actual)
 
     def test_interpret_failing_test_input_error(self) -> None:
@@ -511,7 +505,7 @@ class TestTestCaseEvaluator2(unittest.TestCase):
                 dedup=ExecutionAuxFunctionDetails(defined=False),
                 alert_context=ExecutionAuxFunctionDetails(defined=False)
             ),
-            input_error=TypeError('wrong type')
+            input_error=TYPE_ERR_STRING
         )
         exec_output = ExecutionOutput(
             input_id=spec.id,
@@ -522,8 +516,8 @@ class TestTestCaseEvaluator2(unittest.TestCase):
             id='test-id',
             name='test-name',
             detectionId='',
-            genericError='Invalid event: TypeError: wrong type',
-            error=TestError(message='Invalid event: TypeError: wrong type'),
+            genericError="Invalid event: "+TYPE_ERR_STRING,
+            error=TestError(message="Invalid event: "+TYPE_ERR_STRING),
             errored=True,
             passed=False,
             trigger_alert=True,
@@ -539,7 +533,7 @@ class TestTestCaseEvaluator2(unittest.TestCase):
                 destinationsFunction=None
             )
         )
-        actual = TestCaseEvaluatorExec(spec=spec, exec_output=exec_output).interpret()
+        actual = TestCaseEvaluator(spec=spec, exec_output=exec_output).interpret()
         self.assertEqual(expected, actual)
 
     def test_interpret_generic_error(self) -> None:
@@ -561,7 +555,7 @@ class TestTestCaseEvaluator2(unittest.TestCase):
                 dedup=ExecutionAuxFunctionDetails(defined=False),
                 alert_context=ExecutionAuxFunctionDetails(defined=False)
             ),
-            setup_error=TypeError('wrong type')
+            setup_error=TYPE_ERR_STRING
         )
         exec_output = ExecutionOutput(
             input_id=spec.id,
@@ -572,8 +566,8 @@ class TestTestCaseEvaluator2(unittest.TestCase):
             id='test-id',
             name='test-name',
             detectionId='',
-            genericError='TypeError: wrong type',
-            error=TestError(message='TypeError: wrong type'),
+            genericError=TYPE_ERR_STRING,
+            error=TestError(message=TYPE_ERR_STRING),
             errored=True,
             passed=False,
             trigger_alert=True,
@@ -589,27 +583,43 @@ class TestTestCaseEvaluator2(unittest.TestCase):
                 destinationsFunction=None
             )
         )
-        actual = TestCaseEvaluatorExec(spec=spec, exec_output=exec_output).interpret()
+        actual = TestCaseEvaluator(spec=spec, exec_output=exec_output).interpret()
         self.assertEqual(expected, actual)
 
         # Event compatibility exception
         spec = TestSpecification(id='test-id', name='test-name', data={}, mocks=[], expectations=TestExpectations(detection=False))
-        detection_result = DetectionResult(
-            detection_id=spec.id,
-            trigger_alert=False,
-            input_exception=TypeError('wrong type'),
-            detection_severity='INFO',
-            detection_type=TYPE_RULE
+        exec_details = ExecutionDetails(
+            primary_functions=ExecutionDetailsPrimaryFunctions(
+                detection=ExecutionPrimaryFunctionDetails(
+                    output=None,
+                )
+            ),
+            aux_functions=ExecutionDetailsAuxFunctions(
+                title=ExecutionAuxFunctionDetails(defined=False),
+                runbook=ExecutionAuxFunctionDetails(defined=False),
+                severity=ExecutionAuxFunctionDetails(defined=False),
+                reference=ExecutionAuxFunctionDetails(defined=False),
+                description=ExecutionAuxFunctionDetails(defined=False),
+                destinations=ExecutionAuxFunctionDetails(defined=False),
+                dedup=ExecutionAuxFunctionDetails(defined=False),
+                alert_context=ExecutionAuxFunctionDetails(defined=False)
+            ),
+            input_error=TYPE_ERR_STRING
+        )
+        exec_output = ExecutionOutput(
+            input_id=spec.id,
+            match=exec_match,
+            details=exec_details
         )
         expected = TestResult(
             id='test-id',
             name='test-name',
-            detectionId='test-id',
-            genericError='Invalid event: TypeError: wrong type',
-            error=TestError(message='Invalid event: TypeError: wrong type'),
+            detectionId='',
+            genericError="Invalid event: "+TYPE_ERR_STRING,
+            error=TestError(message="Invalid event: "+TYPE_ERR_STRING),
             errored=True,
             passed=False,
-            trigger_alert=False,
+            trigger_alert=True,
             functions=TestResultsPerFunction(
                 detectionFunction=None,
                 titleFunction=None,
@@ -622,5 +632,5 @@ class TestTestCaseEvaluator2(unittest.TestCase):
                 destinationsFunction=None
             )
         )
-        actual = TestCaseEvaluator(spec=spec, detection_result=detection_result).interpret()
+        actual = TestCaseEvaluator(spec=spec, exec_output=exec_output).interpret()
         self.assertEqual(expected, actual)

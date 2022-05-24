@@ -50,37 +50,37 @@ class FunctionTestResult:
             cls,
             matched: bool,
             output: Optional[Union[bool, str, List[str]]],
-            raw_exception: Optional[Exception] = None,
+            raw_err: Optional[str] = None,
     ) -> Optional["FunctionTestResult"]:
         """Create a new instance while applying
         the necessary transformations to the parameters"""
-        if output is None and raw_exception is None:
+        if output is None and raw_err is None:
             return None
 
         if output is not None and not isinstance(output, str):
             output = json.dumps(output)
 
-        return cls(output=output, error=cls.to_test_error(raw_exception), matched=matched)
+        return cls(output=output, error=cls.to_test_error(raw_err), matched=matched)
 
     @staticmethod
-    def format_exception(exc: Optional[Exception], title: Optional[str] = None) -> Optional[str]:
-        """Convert an exception instance to a structured error message"""
-        if exc is None:
+    def format_error(err: Optional[str], title: Optional[str] = None) -> Optional[str]:
+        """Convert an error string to a structured error message"""
+        if err is None:
             return None
         if title is not None:
             prefix = f"{title}: "
         else:
             prefix = ""
 
-        return f"{prefix}{type(exc).__name__}: {exc}"
+        return f"{prefix}{err}"
 
     @staticmethod
-    def to_test_error(exc: Optional[Exception], title: Optional[str] = None) -> Optional[TestError]:
-        """Convert an exception instance to a TestError,
-        also properly formatting the exception message"""
-        if exc is None:
+    def to_test_error(err: Optional[str], title: Optional[str] = None) -> Optional[TestError]:
+        """Convert an error string to a TestError,
+        also properly formatting the error message"""
+        if err is None:
             return None
-        return TestError(message=FunctionTestResult.format_exception(exc, title=title))
+        return TestError(message=FunctionTestResult.format_error(err, title=title))
 
 
 @dataclass  # pylint: disable=R0902
@@ -141,9 +141,10 @@ class TestCaseEvaluator:
     """Translates detection execution results to test case results,
     by performing assertions and determining the status"""
 
-    def __init__(self, spec: TestSpecification, detection_result: DetectionResult):
+    def __init__(self, spec: TestSpecification, exec_output: ExecutionOutput):
         self._spec = spec
-        self._detection_result = detection_result
+        self._exec_output = exec_output
+        self._exec_match = exec_output.match
 
     def _get_result_status(self) -> bool:
         """Get the test status - passing/failing"""
@@ -152,22 +153,22 @@ class TestCaseEvaluator:
         # Only if the detection is expected to trigger an alert,
         # we want to include errors from other functions in the status.
         if self._spec.expectations.detection == self._get_detection_alert_value():
-            return self._detection_result.trigger_alert and not self._detection_result.errored
+            return self._exec_output.trigger_alert and not self._exec_output.errored
         # expectations match the detection output
-        return self._spec.expectations.detection == self._detection_result.detection_output
+        return self._spec.expectations.detection == self._exec_output.details.primary_functions.detection.output
 
-    def _get_generic_error_details(self) -> Tuple[Optional[Exception], Optional[str]]:
+    def _get_generic_error_details(self) -> Tuple[Optional[str], Optional[str]]:
         generic_error = None
         generic_error_title = None
-        if self._detection_result.input_exception is not None:
-            generic_error = self._detection_result.input_exception
+        if self._exec_output.details.input_error is not None:
+            generic_error = self._exec_output.details.input_error
             generic_error_title = "Invalid event"
-        elif self._detection_result.setup_exception is not None:
-            generic_error = self._detection_result.setup_exception
+        elif self._exec_output.details.setup_error is not None:
+            generic_error = self._exec_output.details.setup_error
         return generic_error, generic_error_title
 
     def _get_detection_alert_value(self) -> bool:
-        if self._detection_result.detection_type.upper() == TYPE_POLICY.upper():
+        if self._exec_match and self._exec_match.detectionType.upper() == TYPE_POLICY.upper():
             return Policy.matcher_alert_value
         return Rule.matcher_alert_value
 
@@ -178,14 +179,13 @@ class TestCaseEvaluator:
 
         # first, we should update the detection result, taking into account any
         # ignored exception types passed into this test
-        if ignore_exception_types:
-            self._detection_result.ignore_errors(ignore_exception_types)
 
         function_results = dict(
             detectionFunction=FunctionTestResult.new(
-                self._spec.expectations.detection == self._detection_result.detection_output,
-                self._detection_result.detection_output,
-                self._detection_result.detection_exception,
+                self._spec.expectations.detection == self._exec_output.details.primary_functions.detection.output,
+                self._exec_output.details.primary_functions.detection.output,
+                ignoreable_exception(self._exec_output.details.primary_functions.detection.error,
+                                     ignore_exception_types),
             )
         )
 
@@ -197,44 +197,52 @@ class TestCaseEvaluator:
             function_results.update(
                 dict(
                     titleFunction=FunctionTestResult.new(
-                        self._detection_result.title_exception is None,
-                        self._detection_result.title_output,
-                        self._detection_result.title_exception,
+                        self._exec_output.details.aux_functions.title.error is None,
+                        self._exec_output.details.aux_functions.title.output,
+                        ignoreable_exception(self._exec_output.details.aux_functions.title.error,
+                                             ignore_exception_types),
                     ),
                     descriptionFunction=FunctionTestResult.new(
-                        self._detection_result.description_exception is None,
-                        self._detection_result.description_output,
-                        self._detection_result.description_exception,
+                        self._exec_output.details.aux_functions.description.error is None,
+                        self._exec_output.details.aux_functions.description.output,
+                        ignoreable_exception(self._exec_output.details.aux_functions.description.error,
+                                             ignore_exception_types),
                     ),
                     referenceFunction=FunctionTestResult.new(
-                        self._detection_result.reference_exception is None,
-                        self._detection_result.reference_output,
-                        self._detection_result.reference_exception,
+                        self._exec_output.details.aux_functions.reference.error is None,
+                        self._exec_output.details.aux_functions.reference.output,
+                        ignoreable_exception(self._exec_output.details.aux_functions.reference.error,
+                                             ignore_exception_types),
                     ),
                     severityFunction=FunctionTestResult.new(
-                        self._detection_result.severity_exception is None,
-                        self._detection_result.severity_output,
-                        self._detection_result.severity_exception,
+                        self._exec_output.details.aux_functions.severity.error is None,
+                        self._exec_output.details.aux_functions.severity.output,
+                        ignoreable_exception(self._exec_output.details.aux_functions.severity.error,
+                                             ignore_exception_types),
                     ),
                     runbookFunction=FunctionTestResult.new(
-                        self._detection_result.runbook_exception is None,
-                        self._detection_result.runbook_output,
-                        self._detection_result.runbook_exception,
+                        self._exec_output.details.aux_functions.runbook.error is None,
+                        self._exec_output.details.aux_functions.runbook.output,
+                        ignoreable_exception(self._exec_output.details.aux_functions.runbook.error,
+                                             ignore_exception_types),
                     ),
                     destinationsFunction=FunctionTestResult.new(
-                        self._detection_result.destinations_exception is None,
-                        self._detection_result.destinations_output,
-                        self._detection_result.destinations_exception,
+                        self._exec_output.details.aux_functions.destinations.error is None,
+                        self._exec_output.details.aux_functions.destinations.output,
+                        ignoreable_exception(self._exec_output.details.aux_functions.destinations.error,
+                                             ignore_exception_types),
                     ),
                     dedupFunction=FunctionTestResult.new(
-                        self._detection_result.dedup_exception is None,
-                        self._detection_result.dedup_output,
-                        self._detection_result.dedup_exception,
+                        self._exec_output.details.aux_functions.dedup.error is None,
+                        self._exec_output.details.aux_functions.dedup.output,
+                        ignoreable_exception(self._exec_output.details.aux_functions.dedup.error,
+                                             ignore_exception_types),
                     ),
                     alertContextFunction=FunctionTestResult.new(
-                        self._detection_result.alert_context_exception is None,
-                        self._detection_result.alert_context_output,
-                        self._detection_result.alert_context_exception,
+                        self._exec_output.details.aux_functions.alert_context.error is None,
+                        self._exec_output.details.aux_functions.alert_context.output,
+                        ignoreable_exception(self._exec_output.details.aux_functions.alert_context.error,
+                                             ignore_exception_types),
                     ),
                 )
             )
@@ -244,14 +252,23 @@ class TestCaseEvaluator:
         return TestResult(
             id=self._spec.id,
             name=self._spec.name,
-            detectionId=self._detection_result.detection_id,
-            genericError=FunctionTestResult.format_exception(
+            detectionId=self._exec_match.detectionId if self._exec_match else '',
+            genericError=FunctionTestResult.format_error(
                 generic_error, title=generic_error_title
             ),
-            errored=self._detection_result.errored,
+            errored=self._exec_output.errored,
             error=FunctionTestResult.to_test_error(generic_error, title=generic_error_title),
             # Passing or failing test?
             passed=self._get_result_status(),
-            trigger_alert=self._detection_result.trigger_alert,
+            trigger_alert=self._exec_output.trigger_alert,
             functions=TestResultsPerFunction(**function_results),
         )
+
+
+def ignoreable_exception(exception: Any,
+                         ignore_exception_types: List[Type[Exception]] = None) -> Optional[str]:
+    if ignore_exception_types:
+        for exception_type in ignore_exception_types:
+            if repr(exception_type) == exception:
+                return None
+    return exception
