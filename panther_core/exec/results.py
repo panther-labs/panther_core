@@ -78,7 +78,6 @@ class ExecutionDetailsAuxFunctions(_BaseDataObject):
     reference: ExecutionAuxFunctionDetails
     description: ExecutionAuxFunctionDetails
     destinations: ExecutionAuxFunctionDetails
-    dedup: ExecutionAuxFunctionDetails
     alert_context: ExecutionAuxFunctionDetails
 
     @property
