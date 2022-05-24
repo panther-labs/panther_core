@@ -23,6 +23,7 @@ from typing import Any, Dict, List, Optional, Tuple, Type, Union
 from .detection import DetectionResult
 from .policy import TYPE_POLICY, Policy
 from .rule import Rule
+from .exec.results import ExecutionOutput
 
 
 @dataclass
@@ -185,7 +186,7 @@ class TestCaseEvaluator:
                 self._spec.expectations.detection == self._detection_result.detection_output,
                 self._detection_result.detection_output,
                 self._detection_result.detection_exception,
-                )
+            )
         )
 
         # We don't include output from other functions
@@ -193,49 +194,48 @@ class TestCaseEvaluator:
         # If the test fails, providing all the output provides a faster feedback loop,
         # on possible additional failures.
         if self._spec.expectations.detection == self._get_detection_alert_value():
-
             function_results.update(
                 dict(
                     titleFunction=FunctionTestResult.new(
                         self._detection_result.title_exception is None,
                         self._detection_result.title_output,
                         self._detection_result.title_exception,
-                        ),
+                    ),
                     descriptionFunction=FunctionTestResult.new(
                         self._detection_result.description_exception is None,
                         self._detection_result.description_output,
                         self._detection_result.description_exception,
-                        ),
+                    ),
                     referenceFunction=FunctionTestResult.new(
                         self._detection_result.reference_exception is None,
                         self._detection_result.reference_output,
                         self._detection_result.reference_exception,
-                        ),
+                    ),
                     severityFunction=FunctionTestResult.new(
                         self._detection_result.severity_exception is None,
                         self._detection_result.severity_output,
                         self._detection_result.severity_exception,
-                        ),
+                    ),
                     runbookFunction=FunctionTestResult.new(
                         self._detection_result.runbook_exception is None,
                         self._detection_result.runbook_output,
                         self._detection_result.runbook_exception,
-                        ),
+                    ),
                     destinationsFunction=FunctionTestResult.new(
                         self._detection_result.destinations_exception is None,
                         self._detection_result.destinations_output,
                         self._detection_result.destinations_exception,
-                        ),
+                    ),
                     dedupFunction=FunctionTestResult.new(
                         self._detection_result.dedup_exception is None,
                         self._detection_result.dedup_output,
                         self._detection_result.dedup_exception,
-                        ),
+                    ),
                     alertContextFunction=FunctionTestResult.new(
                         self._detection_result.alert_context_exception is None,
                         self._detection_result.alert_context_output,
                         self._detection_result.alert_context_exception,
-                        ),
+                    ),
                 )
             )
 
@@ -255,3 +255,142 @@ class TestCaseEvaluator:
             trigger_alert=self._detection_result.trigger_alert,
             functions=TestResultsPerFunction(**function_results),
         )
+
+
+# pylint: disable=too-few-public-methods
+class TestCaseEvaluatorExec:
+    """Translates detection execution results to test case results,
+    by performing assertions and determining the status"""
+
+    def __init__(self, spec: TestSpecification, exec_output: ExecutionOutput):
+        self._spec = spec
+        self._exec_output = exec_output
+        self._exec_match = exec_output.match
+
+    def _get_result_status(self) -> bool:
+        """Get the test status - passing/failing"""
+        # Aux functions are executed unconditionally
+        # (regardless if the detection matched or not) during testing.
+        # Only if the detection is expected to trigger an alert,
+        # we want to include errors from other functions in the status.
+        if self._spec.expectations.detection == self._get_detection_alert_value():
+            return self._exec_output.trigger_alert and not self._exec_output.errored
+        # expectations match the detection output
+        return self._spec.expectations.detection == self._exec_output.details.primary_functions.detection.output
+
+    def _get_generic_error_details(self) -> Tuple[Optional[Exception], Optional[str]]:
+        generic_error = None
+        generic_error_title = None
+        if self._exec_output.details.input_error is not None:
+            generic_error = self._exec_output.details.input_error
+            generic_error_title = "Invalid event"
+        elif self._exec_output.details.setup_error is not None:
+            generic_error = self._exec_output.details.setup_error
+        return generic_error, generic_error_title
+
+    def _get_detection_alert_value(self) -> bool:
+        if self._exec_match and self._exec_match.detectionType.upper() == TYPE_POLICY.upper():
+            return Policy.matcher_alert_value
+        return Rule.matcher_alert_value
+
+    def interpret(self, ignore_exception_types: List[Type[Exception]] = None) -> TestResult:
+        """Evaluate the detection result taking into account
+        the errors raised during evaluation and
+        the test specification expectations"""
+
+        # first, we should update the detection result, taking into account any
+        # ignored exception types passed into this test
+
+        function_results = dict(
+            detectionFunction=FunctionTestResult.new(
+                self._spec.expectations.detection == self._exec_output.details.primary_functions.detection.output,
+                self._exec_output.details.primary_functions.detection.output,
+                ignoreable_exception(self._exec_output.details.primary_functions.detection.error,
+                                     ignore_exception_types),
+            )
+        )
+
+        # We don't include output from other functions
+        # unless the test was expected to match and trigger an alert.
+        # If the test fails, providing all the output provides a faster feedback loop,
+        # on possible additional failures.
+        if self._spec.expectations.detection == self._get_detection_alert_value():
+            function_results.update(
+                dict(
+                    titleFunction=FunctionTestResult.new(
+                        self._exec_output.details.aux_functions.title.error is None,
+                        self._exec_output.details.aux_functions.title.output,
+                        ignoreable_exception(self._exec_output.details.aux_functions.title.error,
+                                             ignore_exception_types),
+                    ),
+                    descriptionFunction=FunctionTestResult.new(
+                        self._exec_output.details.aux_functions.description.error is None,
+                        self._exec_output.details.aux_functions.description.output,
+                        ignoreable_exception(self._exec_output.details.aux_functions.description.error,
+                                             ignore_exception_types),
+                    ),
+                    referenceFunction=FunctionTestResult.new(
+                        self._exec_output.details.aux_functions.reference.error is None,
+                        self._exec_output.details.aux_functions.reference.output,
+                        ignoreable_exception(self._exec_output.details.aux_functions.reference.error,
+                                             ignore_exception_types),
+                    ),
+                    severityFunction=FunctionTestResult.new(
+                        self._exec_output.details.aux_functions.severity.error is None,
+                        self._exec_output.details.aux_functions.severity.output,
+                        ignoreable_exception(self._exec_output.details.aux_functions.severity.error,
+                                             ignore_exception_types),
+                    ),
+                    runbookFunction=FunctionTestResult.new(
+                        self._exec_output.details.aux_functions.runbook.error is None,
+                        self._exec_output.details.aux_functions.runbook.output,
+                        ignoreable_exception(self._exec_output.details.aux_functions.runbook.error,
+                                             ignore_exception_types),
+                    ),
+                    destinationsFunction=FunctionTestResult.new(
+                        self._exec_output.details.aux_functions.destinations.error is None,
+                        self._exec_output.details.aux_functions.destinations.output,
+                        ignoreable_exception(self._exec_output.details.aux_functions.destinations.error,
+                                             ignore_exception_types),
+                    ),
+                    dedupFunction=FunctionTestResult.new(
+                        self._exec_output.details.aux_functions.dedup.error is None,
+                        self._exec_output.details.aux_functions.dedup.output,
+                        ignoreable_exception(self._exec_output.details.aux_functions.dedup.error,
+                                             ignore_exception_types),
+                    ),
+                    alertContextFunction=FunctionTestResult.new(
+                        self._exec_output.details.aux_functions.alert_context.error is None,
+                        self._exec_output.details.aux_functions.alert_context.output,
+                        ignoreable_exception(self._exec_output.details.aux_functions.alert_context.error,
+                                             ignore_exception_types),
+                    ),
+                )
+            )
+
+        generic_error, generic_error_title = self._get_generic_error_details()
+
+        return TestResult(
+            id=self._spec.id,
+            name=self._spec.name,
+            detectionId=self._exec_match.detectionId if self._exec_match else '',
+            genericError=FunctionTestResult.format_exception(
+                generic_error, title=generic_error_title
+            ),
+            errored=self._exec_output.errored,
+            error=FunctionTestResult.to_test_error(generic_error, title=generic_error_title),
+            # Passing or failing test?
+            passed=self._get_result_status(),
+            trigger_alert=self._exec_output.trigger_alert,
+            functions=TestResultsPerFunction(**function_results),
+        )
+
+
+# TODO make this work
+def ignoreable_exception(exception: Any,
+                         ignore_exception_types: List[Type[Exception]] = None) -> Optional[str]:
+    if ignore_exception_types:
+        for exception_type in ignore_exception_types:
+            if repr(exception_type) == exception:
+                return None
+    return exception
