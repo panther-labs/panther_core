@@ -96,13 +96,13 @@ class TestTestCaseEvaluator2(unittest.TestCase):
             detectionId=spec.id,
             detectionType=TYPE_RULE,
             alertType=TYPE_RULE,
-            detectionTags=None,
+            detectionTags=[],
             detectionVersion='',
-            detectionReports=None,
+            detectionReports={},
             dedupString='',
             detectionSeverity='INFO',
-            dedupPeriodMins='',
-            event=None
+            dedupPeriodMins=0,
+            event={}
         )
         exec_details = ExecutionDetails(
             primary_functions=ExecutionDetailsPrimaryFunctions(
@@ -157,13 +157,13 @@ class TestTestCaseEvaluator2(unittest.TestCase):
             detectionId=spec.id,
             detectionType=TYPE_RULE,
             alertType=ERROR_TYPE_RULE,
-            detectionTags=None,
+            detectionTags=[],
             detectionVersion='',
-            detectionReports=None,
+            detectionReports={},
             dedupString='',
             detectionSeverity='INFO',
-            dedupPeriodMins='',
-            event=None
+            dedupPeriodMins=0,
+            event={}
         )
         exec_details = ExecutionDetails(
             primary_functions=ExecutionDetailsPrimaryFunctions(
@@ -219,13 +219,13 @@ class TestTestCaseEvaluator2(unittest.TestCase):
             detectionId=spec.id,
             detectionType=TYPE_RULE,
             alertType=TYPE_RULE,
-            detectionTags=None,
+            detectionTags=[],
             detectionVersion='',
-            detectionReports=None,
+            detectionReports={},
             dedupString='',
             detectionSeverity='INFO',
-            dedupPeriodMins='',
-            event=None
+            dedupPeriodMins=0,
+            event={}
         )
         exec_details = ExecutionDetails(
             primary_functions=ExecutionDetailsPrimaryFunctions(
@@ -283,13 +283,13 @@ class TestTestCaseEvaluator2(unittest.TestCase):
             detectionId=spec.id,
             detectionType=TYPE_RULE,
             alertType=TYPE_RULE,
-            detectionTags=None,
+            detectionTags=[],
             detectionVersion='',
-            detectionReports=None,
+            detectionReports={},
             dedupString='',
             detectionSeverity='INFO',
-            dedupPeriodMins='',
-            event=None
+            dedupPeriodMins=0,
+            event={}
         )
         exec_details = ExecutionDetails(
             primary_functions=ExecutionDetailsPrimaryFunctions(
@@ -345,13 +345,13 @@ class TestTestCaseEvaluator2(unittest.TestCase):
             detectionId=spec.id,
             detectionType=TYPE_RULE,
             alertType=TYPE_RULE,
-            detectionTags=None,
+            detectionTags=[],
             detectionVersion='',
-            detectionReports=None,
+            detectionReports={},
             dedupString='',
             detectionSeverity='INFO',
-            dedupPeriodMins='',
-            event=None
+            dedupPeriodMins=0,
+            event={}
         )
         exec_details = ExecutionDetails(
             primary_functions=ExecutionDetailsPrimaryFunctions(
@@ -422,13 +422,13 @@ class TestTestCaseEvaluator2(unittest.TestCase):
             detectionId=spec.id,
             detectionType=TYPE_POLICY,
             alertType=TYPE_POLICY,
-            detectionTags=None,
+            detectionTags=[],
             detectionVersion='',
-            detectionReports=None,
+            detectionReports={},
             dedupString='',
             detectionSeverity='INFO',
-            dedupPeriodMins='',
-            event=None
+            dedupPeriodMins=0,
+            event={}
         )
         exec_details = ExecutionDetails(
             primary_functions=ExecutionDetailsPrimaryFunctions(
