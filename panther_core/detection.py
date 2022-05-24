@@ -79,18 +79,6 @@ class DetectionResult:
 
     input_exception: Optional[Exception] = None
 
-
-    @property
-    def alert_type(self) -> str:
-        """Return the proper alert type given then detection type and match type"""
-        if self.error_message:
-            if self.detection_type == TYPE_RULE:
-                return ERROR_TYPE_RULE
-            if self.detection_type == TYPE_POLICY:
-                return ERROR_TYPE_POLICY
-            return ERROR_TYPE_SCHEDULED_RULE
-        return self.detection_type
-
     @property
     def fatal_error(self) -> Optional[Exception]:
         """Provide any error that would stop evaluation
