@@ -17,7 +17,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 from dataclasses import dataclass
-from typing import Dict, List, Optional, Type
+
+from typing import Dict, List, Optional
 
 from .common import ExecutionMatch, ExecutionMode, _BaseDataObject
 
@@ -70,6 +71,7 @@ class ExecutionAuxFunctionDetails(_BaseDataObject):
 
 @dataclass(frozen=True)
 class ExecutionDetailsAuxFunctions(_BaseDataObject):
+    dedup: ExecutionAuxFunctionDetails
     title: ExecutionAuxFunctionDetails
     runbook: ExecutionAuxFunctionDetails
     severity: ExecutionAuxFunctionDetails
@@ -93,6 +95,7 @@ class ExecutionDetailsAuxFunctions(_BaseDataObject):
     @classmethod
     def from_json(cls, data: Dict[str, any]):
         return cls(
+            dedup=ExecutionAuxFunctionDetails.from_json(data['dedup']),
             title=ExecutionAuxFunctionDetails.from_json(data['title']),
             runbook=ExecutionAuxFunctionDetails.from_json(data['runbook']),
             severity=ExecutionAuxFunctionDetails.from_json(data['severity']),
@@ -118,6 +121,7 @@ class ExecutionDetails(_BaseDataObject):
                or self.aux_functions.errored \
                or self.primary_functions.errored
 
+
     @classmethod
     def from_json(cls, data: Dict[str, any]):
         return cls(
@@ -140,7 +144,6 @@ class ExecutionOutput(_BaseDataObject):
     @property
     def errored(self):
         return (self.match and self.match.errored) or (self.details and self.details.errored)
-
 
     @classmethod
     def from_json(cls, data: Dict[str, any]):

@@ -17,12 +17,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 import json
+
+from ..rule import ERROR_TYPE_RULE, ERROR_TYPE_SCHEDULED_RULE
+from ..policy import ERROR_TYPE_POLICY
+
+from dataclasses import asdict, dataclass
 from enum import Enum
 from typing import Any, Dict, List, Optional
 
-from dataclasses import dataclass, asdict
-from ..rule import ERROR_TYPE_RULE, ERROR_TYPE_SCHEDULED_RULE
-from ..policy import ERROR_TYPE_POLICY
 
 # Aliases
 ExecutionInputData = Dict[str, Any]
@@ -33,6 +35,7 @@ CloudResourceInput = Dict[str, Any]
 
 @dataclass(frozen=True)
 class ExecutionMatch:
+
     # required for all matches
     alertType: str
     detectionType: str
@@ -55,39 +58,12 @@ class ExecutionMatch:
     reference: Optional[str] = None
     runbook: Optional[str] = None
     title: Optional[str] = None
-
-
-@dataclass(frozen=True)
-class ExecutionMatch:
 
     @property
     def errored(self):
         return self.alertType == ERROR_TYPE_RULE or \
                self.alertType == ERROR_TYPE_SCHEDULED_RULE \
                or self.alertType == ERROR_TYPE_POLICY
-
-    # required for all matches
-    alertType: str
-    detectionType: str
-    detectionId: str
-    detectionVersion: str
-    detectionTags: List[str]
-    detectionReports: Dict[str, List[str]]
-    detectionSeverity: str
-    dedupString: str
-    dedupPeriodMins: int
-    event: Dict[str, Any]
-    # one of these will be set
-    eventId: Optional[str] = None
-    replayId: Optional[str] = None
-    # optional dynamic fields
-    alertContext: Optional[str] = None
-    description: Optional[str] = None
-    destinations: Optional[List[str]] = None
-    severity: Optional[str] = None
-    reference: Optional[str] = None
-    runbook: Optional[str] = None
-    title: Optional[str] = None
 
 
 @dataclass(frozen=True)

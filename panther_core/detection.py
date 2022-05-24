@@ -79,6 +79,7 @@ class DetectionResult:
 
     input_exception: Optional[Exception] = None
 
+
     @property
     def alert_type(self) -> str:
         """Return the proper alert type given then detection type and match type"""
