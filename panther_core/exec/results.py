@@ -102,7 +102,6 @@ class ExecutionDetailsAuxFunctions(_BaseDataObject):
             reference=ExecutionAuxFunctionDetails.from_json(data['reference']),
             description=ExecutionAuxFunctionDetails.from_json(data['description']),
             destinations=ExecutionAuxFunctionDetails.from_json(data['destinations']),
-            dedup=ExecutionAuxFunctionDetails.from_json(data['dedup']),
             alert_context=ExecutionAuxFunctionDetails.from_json(data['alert_context']),
         )
 
