@@ -386,7 +386,6 @@ class TestCaseEvaluatorExec:
         )
 
 
-# TODO make this work
 def ignoreable_exception(exception: Any,
                          ignore_exception_types: List[Type[Exception]] = None) -> Optional[str]:
     if ignore_exception_types:
