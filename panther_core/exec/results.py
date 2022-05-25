@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 from dataclasses import dataclass
+
 from typing import Dict, List, Optional
 
 from .common import ExecutionMatch, ExecutionMode, _BaseDataObject
@@ -38,6 +39,10 @@ class ExecutionPrimaryFunctionDetails(_BaseDataObject):
 class ExecutionDetailsPrimaryFunctions(_BaseDataObject):
     detection: ExecutionPrimaryFunctionDetails
 
+    @property
+    def errored(self):
+        return self.detection.error is not None
+
     @classmethod
     def from_json(cls, data: Dict[str, any]):
         return cls(
@@ -50,6 +55,10 @@ class ExecutionAuxFunctionDetails(_BaseDataObject):
     defined: bool
     error: Optional[str] = None
     output: Optional[str] = None
+
+    @property
+    def errored(self):
+        return self.error is not None
 
     @classmethod
     def from_json(cls, data: Dict[str, any]):
@@ -70,6 +79,17 @@ class ExecutionDetailsAuxFunctions(_BaseDataObject):
     description: ExecutionAuxFunctionDetails
     destinations: ExecutionAuxFunctionDetails
     alert_context: ExecutionAuxFunctionDetails
+
+    @property
+    def errored(self):
+        return self.title.errored \
+            or self.runbook.errored \
+            or self.severity.errored \
+            or self.reference.errored \
+            or self.description.errored \
+            or self.destinations.errored \
+            or self.dedup.errored \
+            or self.alert_context.errored
 
     @classmethod
     def from_json(cls, data: Dict[str, any]):
@@ -92,6 +112,14 @@ class ExecutionDetails(_BaseDataObject):
     input_error: Optional[str] = None
     setup_error: Optional[str] = None
 
+    @property
+    def errored(self):
+        return self.input_error is not None \
+               or self.setup_error is not None \
+               or self.aux_functions.errored \
+               or self.primary_functions.errored
+
+
     @classmethod
     def from_json(cls, data: Dict[str, any]):
         return cls(
@@ -106,6 +134,14 @@ class ExecutionOutput(_BaseDataObject):
     input_id: str
     match: Optional[ExecutionMatch] = None
     details: Optional[ExecutionDetails] = None
+
+    @property
+    def trigger_alert(self):
+        return self.match is not None or self.errored is True
+
+    @property
+    def errored(self):
+        return (self.match and self.match.errored) or (self.details and self.details.errored)
 
     @classmethod
     def from_json(cls, data: Dict[str, any]):

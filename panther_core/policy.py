@@ -23,7 +23,6 @@ from .rule import Detection
 TYPE_POLICY = "POLICY"
 ERROR_TYPE_POLICY = "POLICY_ERROR"
 
-
 class Policy(Detection):
     """Panther policy metadata and imported module."""
 

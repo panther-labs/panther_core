@@ -17,9 +17,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 import json
+
+from ..rule import ERROR_TYPE_RULE, ERROR_TYPE_SCHEDULED_RULE
+from ..policy import ERROR_TYPE_POLICY
+
 from dataclasses import asdict, dataclass
 from enum import Enum
 from typing import Any, Dict, List, Optional
+
 
 # Aliases
 ExecutionInputData = Dict[str, Any]
@@ -30,6 +35,7 @@ CloudResourceInput = Dict[str, Any]
 
 @dataclass(frozen=True)
 class ExecutionMatch:
+
     # required for all matches
     alertType: str
     detectionType: str
@@ -52,6 +58,12 @@ class ExecutionMatch:
     reference: Optional[str] = None
     runbook: Optional[str] = None
     title: Optional[str] = None
+
+    @property
+    def errored(self):
+        return self.alertType == ERROR_TYPE_RULE or \
+               self.alertType == ERROR_TYPE_SCHEDULED_RULE \
+               or self.alertType == ERROR_TYPE_POLICY
 
 
 @dataclass(frozen=True)
