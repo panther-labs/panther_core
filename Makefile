@@ -1,11 +1,29 @@
 packages = panther_core
 
-ci: unit
+ci: lint unit
+
 
 deps:
-	pip install -r requirements.txt
+	pipenv install --dev
+
+deps-update:
+	pipenv update
+	pipenv lock -r  > requirements.txt
+
+lint:
+	pipenv run mypy $(packages) --disallow-untyped-defs --ignore-missing-imports --warn-unused-ignores
+	pipenv run bandit -r $(packages)
+	pipenv run pylint $(packages) --disable=missing-docstring,bad-continuation,duplicate-code,W0511,R0912,too-many-lines --max-line-length=100
+
+fmt:
+	pipenv run isort --profile=black $(packages)
+	pipenv run black --line-length=100 $(packages)
+
+install:
+	pipenv install --dev
 
 unit:
-	python -m unittest discover -s ./tests/unit/panther_core/
+	pipenv run nosetests -v
 
 test: unit
+

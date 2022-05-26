@@ -18,12 +18,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import json
 
+from ..rule import ERROR_TYPE_RULE, ERROR_TYPE_SCHEDULED_RULE
+from ..policy import ERROR_TYPE_POLICY
+
+from dataclasses import asdict, dataclass
 from enum import Enum
-from typing import Any, Dict
-from dataclasses import dataclass, asdict
+from typing import Any, Dict, List, Optional
+
 
 # Aliases
-ExecutionMatch = Dict[str, any]
 ExecutionInputData = Dict[str, Any]
 ExecutionEnvComponent = Dict[str, Any]
 
@@ -32,20 +35,39 @@ CloudResourceInput = Dict[str, Any]
 
 @dataclass(frozen=True)
 class ExecutionMatch:
+
     # required for all matches
     alertType: str
+    detectionType: str
+    detectionId: str
+    detectionVersion: str
+    detectionTags: List[str]
+    detectionReports: Dict[str, List[str]]
+    detectionSeverity: str
     dedupString: str
+    dedupPeriodMins: int
     event: Dict[str, Any]
     # one of these will be set
-    eventId: Optional[str]
-    replayId: Optional[str]
+    eventId: Optional[str] = None
+    replayId: Optional[str] = None
     # optional dynamic fields
-    alert_context: Optional[str]
-    description: Optional[str]
-    destinations: Optional[List[str]]
-    severity: Optional[str]
-    reference: Optional[str]
-    runbook: Optional[str]
+    alertContext: Optional[str] = None
+    description: Optional[str] = None
+    destinations: Optional[List[str]] = None
+    severity: Optional[str] = None
+    reference: Optional[str] = None
+    runbook: Optional[str] = None
+    title: Optional[str] = None
+
+    @property
+    def errored(self):
+        return self.alertType == ERROR_TYPE_RULE or \
+               self.alertType == ERROR_TYPE_SCHEDULED_RULE \
+               or self.alertType == ERROR_TYPE_POLICY
+
+    @classmethod
+    def from_json(cls, data: Dict[str, any]):
+        return cls(**data)
 
 
 @dataclass(frozen=True)

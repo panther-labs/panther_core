@@ -79,6 +79,7 @@ class DetectionResult:
 
     input_exception: Optional[Exception] = None
 
+
     @property
     def fatal_error(self) -> Optional[Exception]:
         """Provide any error that would stop evaluation
