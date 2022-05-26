@@ -65,6 +65,9 @@ class ExecutionMatch:
                self.alertType == ERROR_TYPE_SCHEDULED_RULE \
                or self.alertType == ERROR_TYPE_POLICY
 
+    @classmethod
+    def from_json(cls, data: Dict[str, any]):
+        return cls(**data)
 
 @dataclass(frozen=True)
 class _BaseDataObject:

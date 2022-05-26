@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import json
 import unittest
 
-from panther_core.exec.common import ExecutionMode
+from panther_core.exec.common import ExecutionMode, ExecutionMatch
 
 from panther_core.exec.task import (
     ExecutionEnv,
@@ -105,7 +105,18 @@ class TestSerialization(unittest.TestCase):
             data=[
                 ExecutionOutput(
                     input_id="xyz",
-                    match=dict(input_id="1"),
+                    match=ExecutionMatch(
+                        detectionId="1",
+                        alertType="RULE",
+                        detectionType="RULE",
+                        detectionVersion="0",
+                        detectionTags=[],
+                        detectionReports={},
+                        detectionSeverity="INFO",
+                        dedupString="",
+                        dedupPeriodMins=0,
+                        event={}
+                    ),
                     details=ExecutionDetails(
                         aux_functions=ExecutionDetailsAuxFunctions(
                             dedup=ExecutionAuxFunctionDetails(

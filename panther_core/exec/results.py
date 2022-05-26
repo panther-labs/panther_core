@@ -146,7 +146,7 @@ class ExecutionOutput(_BaseDataObject):
     @classmethod
     def from_json(cls, data: Dict[str, any]):
         return cls(
-            match=data['match'],
+            match=ExecutionMatch.from_json(data['match']),
             details=ExecutionDetails.from_json(data['details']),
             input_id=data['input_id'],
         )
