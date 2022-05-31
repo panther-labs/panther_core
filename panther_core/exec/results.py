@@ -123,8 +123,8 @@ class ExecutionDetails(_BaseDataObject):
     @classmethod
     def from_json(cls, data: Dict[str, any]):
         return cls(
-            input_error=data.get('input_exception'),
-            setup_error=data.get('setup_exception'),
+            input_error=data.get('input_error'),
+            setup_error=data.get('setup_error'),
             aux_functions=ExecutionDetailsAuxFunctions.from_json(data['aux_functions']),
             primary_functions=ExecutionDetailsPrimaryFunctions.from_json(data['primary_functions']),
         )
