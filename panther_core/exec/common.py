@@ -67,7 +67,9 @@ class ExecutionMatch:
 
     @classmethod
     def from_json(cls, data: Dict[str, any]):
-        return cls(**data)
+        if data is not None:
+            return cls(**data)
+        return None
 
 @dataclass(frozen=True)
 class _BaseDataObject:
