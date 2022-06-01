@@ -22,14 +22,14 @@ setup(
     name='panther_core',
     packages=['panther_core', 'panther_core/exec'],
     package_dir={'exec': 'panther_core/exec'},
-    version='0.0.6',
+    version='0.0.7',
     license='AGPL-3.0',
     description=
     'Panther command line interface for writing, testing, and packaging policies/rules.',
     author='Panther Labs Inc',
     author_email='pypi@runpanther.io',
     url='https://github.com/panther-labs/panther_core',
-    download_url = 'https://github.com/panther-labs/panther_core/archive/v0.0.6.tar.gz',
+    download_url = 'https://github.com/panther-labs/panther_core/archive/v0.0.7.tar.gz',
     keywords=['Security', 'CLI'],
     install_requires=install_requires,
     classifiers=[
