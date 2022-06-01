@@ -51,10 +51,10 @@ class ExecutionMatch:
     eventId: Optional[str] = None
     replayId: Optional[str] = None
     # optional dynamic fields
+    severity: Optional[str] = None
     alertContext: Optional[str] = None
     description: Optional[str] = None
     destinations: Optional[List[str]] = None
-    severity: Optional[str] = None
     reference: Optional[str] = None
     runbook: Optional[str] = None
     title: Optional[str] = None
@@ -67,7 +67,9 @@ class ExecutionMatch:
 
     @classmethod
     def from_json(cls, data: Dict[str, any]):
-        return cls(**data)
+        if data is not None:
+            return cls(**data)
+        return None
 
 @dataclass(frozen=True)
 class _BaseDataObject:
