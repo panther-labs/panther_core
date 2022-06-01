@@ -165,7 +165,9 @@ class TestSerialization(unittest.TestCase):
                                 error=None,
                                 output=False,
                             ),
-                        )
+                        ),
+                        setup_error="boop",
+                        input_error="boop"
                     )
                 )
             ]
