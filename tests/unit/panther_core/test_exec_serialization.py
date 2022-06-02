@@ -77,7 +77,7 @@ class TestSerialization(unittest.TestCase):
                     outputs=[dict(id="b")],
                     globals=[dict(id="a")],
                     detections=[dict(id="b")],
-                    data_models=[],
+                    data_model=None,
                 )
             ),
             input=ExecutionTaskInput(
