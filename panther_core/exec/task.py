@@ -113,7 +113,7 @@ class ExecutionEnv(_BaseDataObject):
             outputs=data.get('outputs', []),
             globals=data.get('globals', []),
             detections=data.get('detections', []),
-            data_model=data.get('data_models', None),
+            data_model=data.get('data_model', None),
         )
 
 
