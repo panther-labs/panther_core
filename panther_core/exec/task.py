@@ -104,7 +104,7 @@ class ExecutionEnv(_BaseDataObject):
     outputs: List[ExecutionEnvComponent]
     globals: List[ExecutionEnvComponent]
     detections: List[ExecutionEnvComponent]
-    data_models: List[ExecutionEnvComponent]
+    data_model: Optional[ExecutionEnvComponent]
 
     @classmethod
     def from_json(cls, data: Dict[str, any]):
@@ -113,7 +113,7 @@ class ExecutionEnv(_BaseDataObject):
             outputs=data.get('outputs', []),
             globals=data.get('globals', []),
             detections=data.get('detections', []),
-            data_models=data.get('data_models', []),
+            data_model=data.get('data_models', None),
         )
 
 
