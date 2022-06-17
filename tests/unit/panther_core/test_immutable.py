@@ -1,5 +1,5 @@
 """
-Panther Analysis Tool is a command line interface for writing,
+Panther Core is a command line interface for writing,
 testing, and packaging policies/rules.
 Copyright (C) 2020 Panther Labs Inc
 

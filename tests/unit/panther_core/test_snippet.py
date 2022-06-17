@@ -1,5 +1,5 @@
 """
-Panther Analysis Tool is a command line interface for writing,
+Panther Core is a command line interface for writing,
 testing, and packaging policies/rules.
 Copyright (C) 2020 Panther Labs Inc
 
@@ -17,7 +17,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-"""Unit tests for src/policy.py"""
+"""Unit tests for src/snippet.py"""
 import unittest
 
 from panther_core.snippet import Snippet
