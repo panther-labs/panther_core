@@ -17,7 +17,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-"""Unit tests for src/pre_filter.py"""
+"""Unit tests for panther_core/pre_filter.py"""
 import unittest
 
 from panther_core.pre_filter import (
@@ -35,7 +35,7 @@ from panther_core.pre_filter import (
 )
 
 class TestPreFilter(unittest.TestCase):
-    """Unit tests for pre_filter.prefilter"""
+    """Unit tests for panther_core.pre_filter"""
 
     def test_pre_filter_and(self) -> None:
         filter = PreFilter(

@@ -17,14 +17,14 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-"""Unit tests for src/snippet.py"""
+"""Unit tests for panther_core/snippet.py"""
 import unittest
 
 from panther_core.snippet import Snippet
 
 
 class TestSnippet(unittest.TestCase):
-    """Unit tests for policy.Policy"""
+    """Unit tests for panther_core.snippet"""
 
     def test_prefilter_snippet_success(self) -> None:
         snipper = Snippet(
