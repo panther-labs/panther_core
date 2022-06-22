@@ -17,6 +17,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
+from dataclasses import dataclass
 from typing import Dict
 
 from .pre_filter import PreFilter
@@ -39,3 +40,10 @@ class Snippet:
 
     def prefilter(self, event: Dict) -> bool:
         return self.when.filter(event)
+
+@dataclass
+class SnippetResult:
+    snippet_id: str
+    snippet_type: str
+    snippet_output: Optional[bool] = None
+    snippet_exception: Optional[Exception] = None
