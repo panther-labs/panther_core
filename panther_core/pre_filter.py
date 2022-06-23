@@ -33,7 +33,7 @@ NOT = "Not"
 AND = "And"
 OR = "Or"
 
-TYPE_PRE_FILTER = "Panther::PreFilter"
+TYPE_PRE_FILTER = "prefilter"
 
 class PreFilter:
     key: str
