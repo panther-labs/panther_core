@@ -80,7 +80,7 @@ class TestTestCaseEvaluator2(unittest.TestCase):
                 destinationsFunction=None
             )
         )
-        actual = TestCaseEvaluator(spec=spec, exec_output=exec_output).interpret()
+        actual = TestCaseEvaluator.for_rules(spec=spec, exec_output=exec_output).interpret()
         self.assertEqual(expected, actual)
 
     def test_interpret_passing_test_expected_to_trigger_alert(self) -> None:
@@ -141,7 +141,7 @@ class TestTestCaseEvaluator2(unittest.TestCase):
                 destinationsFunction=None
             )
         )
-        actual = TestCaseEvaluator(spec=spec, exec_output=exec_output).interpret()
+        actual = TestCaseEvaluator.for_rules(spec=spec, exec_output=exec_output).interpret()
         self.assertEqual(expected, actual)
 
     def test_interpret_failing_test_expected_to_trigger_alert(self) -> None:
@@ -203,9 +203,9 @@ class TestTestCaseEvaluator2(unittest.TestCase):
                 destinationsFunction=None
             )
         )
-        actual = TestCaseEvaluator(spec=spec, exec_output=exec_output).interpret()
+        actual = TestCaseEvaluator.for_rules(spec=spec, exec_output=exec_output).interpret()
         self.assertEqual(expected, actual)
-    
+
     def test_interpret_failing_test_expected_to_match_aux_function_error(self) -> None:
         spec = TestSpecification(id='test-id', name='test-name', data={}, mocks=[], expectations=TestExpectations(detection=True))
         exec_match = ExecutionMatch(
@@ -267,7 +267,7 @@ class TestTestCaseEvaluator2(unittest.TestCase):
                 destinationsFunction=None
             )
         )
-        actual = TestCaseEvaluator(spec=spec, exec_output=exec_output).interpret()
+        actual = TestCaseEvaluator.for_rules(spec=spec, exec_output=exec_output).interpret()
         self.assertEqual(expected, actual)
 
     def test_interpret_failing_test_expected_to_trigger_alert_detection_error(self) -> None:
@@ -329,7 +329,7 @@ class TestTestCaseEvaluator2(unittest.TestCase):
                 destinationsFunction=None
             )
         )
-        actual = TestCaseEvaluator(spec=spec, exec_output=exec_output).interpret()
+        actual = TestCaseEvaluator.for_rules(spec=spec, exec_output=exec_output).interpret()
         self.assertEqual(expected, actual)
 
     def test_interpret_failing_test_expected_to_trigger_alert_with_aux_exception(self) -> None:
@@ -406,7 +406,7 @@ class TestTestCaseEvaluator2(unittest.TestCase):
                 destinationsFunction=None,
             )
         )
-        actual = TestCaseEvaluator(spec=spec, exec_output=exec_output).interpret()
+        actual = TestCaseEvaluator.for_rules(spec=spec, exec_output=exec_output).interpret()
         self.assertEqual(expected, actual)
 
     def test_interpret_failing_test_policy_expected_to_trigger_alert_with_aux_exception(self) -> None:
@@ -483,7 +483,7 @@ class TestTestCaseEvaluator2(unittest.TestCase):
                 destinationsFunction=None,
             )
         )
-        actual = TestCaseEvaluator(spec=spec, exec_output=exec_output).interpret()
+        actual = TestCaseEvaluator.for_policies(spec=spec, exec_output=exec_output).interpret()
         self.assertEqual(expected, actual)
 
     def test_interpret_failing_test_input_error(self) -> None:
@@ -533,7 +533,7 @@ class TestTestCaseEvaluator2(unittest.TestCase):
                 destinationsFunction=None
             )
         )
-        actual = TestCaseEvaluator(spec=spec, exec_output=exec_output).interpret()
+        actual = TestCaseEvaluator.for_rules(spec=spec, exec_output=exec_output).interpret()
         self.assertEqual(expected, actual)
 
     def test_interpret_generic_error(self) -> None:
@@ -583,7 +583,7 @@ class TestTestCaseEvaluator2(unittest.TestCase):
                 destinationsFunction=None
             )
         )
-        actual = TestCaseEvaluator(spec=spec, exec_output=exec_output).interpret()
+        actual = TestCaseEvaluator.for_rules(spec=spec, exec_output=exec_output).interpret()
         self.assertEqual(expected, actual)
 
         # Event compatibility exception
@@ -632,5 +632,5 @@ class TestTestCaseEvaluator2(unittest.TestCase):
                 destinationsFunction=None
             )
         )
-        actual = TestCaseEvaluator(spec=spec, exec_output=exec_output).interpret()
+        actual = TestCaseEvaluator.for_rules(spec=spec, exec_output=exec_output).interpret()
         self.assertEqual(expected, actual)

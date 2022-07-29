@@ -1,6 +1,6 @@
 packages = panther_core
 
-ci: lint unit
+ci: lint test
 
 
 deps:
@@ -22,8 +22,5 @@ fmt:
 install:
 	pipenv install --dev
 
-unit:
+test:
 	pipenv run nosetests -v
-
-test: unit
-
