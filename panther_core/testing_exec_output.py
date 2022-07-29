@@ -141,10 +141,19 @@ class TestCaseEvaluator:
     """Translates detection execution results to test case results,
     by performing assertions and determining the status"""
 
-    def __init__(self, spec: TestSpecification, exec_output: ExecutionOutput):
+    @classmethod
+    def for_policies(cls, spec: TestSpecification, exec_output: ExecutionOutput):
+        return cls(spec=spec, exec_output=exec_output, alert_value=False)
+
+    @classmethod
+    def for_rules(cls, spec: TestSpecification, exec_output: ExecutionOutput):
+        return cls(spec=spec, exec_output=exec_output, alert_value=True)
+
+    def __init__(self, spec: TestSpecification, exec_output: ExecutionOutput, alert_value: bool):
         self._spec = spec
         self._exec_output = exec_output
         self._exec_match = exec_output.match
+        self._detection_alert_value = alert_value
 
     def _get_result_status(self) -> bool:
         """Get the test status - passing/failing"""
@@ -152,7 +161,7 @@ class TestCaseEvaluator:
         # (regardless if the detection matched or not) during testing.
         # Only if the detection is expected to trigger an alert,
         # we want to include errors from other functions in the status.
-        if self._spec.expectations.detection == self._get_detection_alert_value():
+        if self._spec.expectations.detection == self._detection_alert_value:
             return self._exec_output.trigger_alert and not self._exec_output.errored
         # expectations match the detection output
         return self._spec.expectations.detection == self._exec_output.details.primary_functions.detection.output
@@ -166,11 +175,6 @@ class TestCaseEvaluator:
         elif self._exec_output.details.setup_error is not None:
             generic_error = self._exec_output.details.setup_error
         return generic_error, generic_error_title
-
-    def _get_detection_alert_value(self) -> bool:
-        if self._exec_match and self._exec_match.detectionType.upper() == TYPE_POLICY.upper():
-            return Policy.matcher_alert_value
-        return Rule.matcher_alert_value
 
     def interpret(self, ignore_exception_types: List[Type[Exception]] = None) -> TestResult:
         """Evaluate the detection result taking into account
@@ -193,7 +197,7 @@ class TestCaseEvaluator:
         # unless the test was expected to match and trigger an alert.
         # If the test fails, providing all the output provides a faster feedback loop,
         # on possible additional failures.
-        if self._spec.expectations.detection == self._get_detection_alert_value():
+        if self._spec.expectations.detection == self._detection_alert_value:
             function_results.update(
                 dict(
                     titleFunction=FunctionTestResult.new(
