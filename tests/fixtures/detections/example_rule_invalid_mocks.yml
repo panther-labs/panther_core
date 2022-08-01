@@ -18,8 +18,8 @@ Tests:
     Mocks:
       [
         {
-          "objectName": "boto3",
-          "returnValue": "example_boto3_return_value"
+          "objectName": "json",
+          "returnValue": "example_json_return_value"
         },
         {
           "objectName": "date",

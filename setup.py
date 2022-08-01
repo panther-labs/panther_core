@@ -1,13 +1,7 @@
 from distutils.core import setup
 
 install_requires = [
-    'boto3',
-    'dynaconf',
     'jsonpath-ng',
-    'requests',
-    'ruamel.yaml',
-    'schema',
-    'semver',
 ]
 
 with open('requirements.txt') as f:
@@ -22,14 +16,14 @@ setup(
     name='panther_core',
     packages=['panther_core', 'panther_core/exec'],
     package_dir={'exec': 'panther_core/exec'},
-    version='0.0.10',
+    version='0.0.11',
     license='AGPL-3.0',
     description=
     'Panther command line interface for writing, testing, and packaging policies/rules.',
     author='Panther Labs Inc',
     author_email='pypi@runpanther.io',
     url='https://github.com/panther-labs/panther_core',
-    download_url = 'https://github.com/panther-labs/panther_core/archive/v0.0.10.tar.gz',
+    download_url = 'https://github.com/panther-labs/panther_core/archive/v0.0.11.tar.gz',
     keywords=['Security', 'CLI'],
     install_requires=install_requires,
     classifiers=[

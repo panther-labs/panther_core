@@ -21,6 +21,13 @@ fmt:
 
 install:
 	pipenv install --dev
+	pipenv lock -r  > requirements.txt
+
+package: install
+	pipenv run python3 setup.py sdist
+
+publish: install package
+	twine upload dist/*
 
 test:
 	pipenv run nosetests -v
