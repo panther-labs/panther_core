@@ -10,7 +10,7 @@ jobs:
             name: Install dependencies
             command: make deps
         - run:
-            name: Run tests
+            name: Run linter
             command: make lint
         - run:
             name: Run tests
