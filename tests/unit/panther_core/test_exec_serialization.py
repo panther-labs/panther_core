@@ -106,15 +106,15 @@ class TestSerialization(unittest.TestCase):
                 ExecutionOutput(
                     input_id="xyz",
                     match=ExecutionMatch(
-                        detectionId="1",
-                        alertType="RULE",
-                        detectionType="RULE",
-                        detectionVersion="0",
-                        detectionTags=[],
-                        detectionReports={},
-                        detectionSeverity="INFO",
-                        dedupString="",
-                        dedupPeriodMins=0,
+                        detection_id="1",
+                        alert_type="RULE",
+                        detection_type="RULE",
+                        detection_version="0",
+                        detection_tags=[],
+                        detection_reports={},
+                        detection_severity="INFO",
+                        dedup_string="",
+                        dedup_period_mins=0,
                         event={}
                     ),
                     details=ExecutionDetails(
