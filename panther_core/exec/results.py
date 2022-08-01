@@ -16,11 +16,13 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
+from __future__ import annotations
 from dataclasses import dataclass
 
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Any
 
 from .common import ExecutionMatch, ExecutionMode, _BaseDataObject
+
 
 @dataclass(frozen=True)
 class ExecutionPrimaryFunctionDetails(_BaseDataObject):
@@ -28,7 +30,7 @@ class ExecutionPrimaryFunctionDetails(_BaseDataObject):
     output: Optional[bool] = None
 
     @classmethod
-    def from_json(cls, data: Dict[str, any]):
+    def from_json(cls, data: Dict[str, Any]) -> ExecutionPrimaryFunctionDetails:
         return cls(
             error=data.get('error'),
             output=data.get('output'),
@@ -40,11 +42,11 @@ class ExecutionDetailsPrimaryFunctions(_BaseDataObject):
     detection: ExecutionPrimaryFunctionDetails
 
     @property
-    def errored(self):
+    def errored(self) -> bool:
         return self.detection.error is not None
 
     @classmethod
-    def from_json(cls, data: Dict[str, any]):
+    def from_json(cls, data: Dict[str, Any]) -> ExecutionDetailsPrimaryFunctions:
         return cls(
             detection=ExecutionPrimaryFunctionDetails.from_json(data.get('detection', {})),
         )
@@ -57,11 +59,11 @@ class ExecutionAuxFunctionDetails(_BaseDataObject):
     output: Optional[str] = None
 
     @property
-    def errored(self):
+    def errored(self) -> bool:
         return self.error is not None
 
     @classmethod
-    def from_json(cls, data: Dict[str, any]):
+    def from_json(cls, data: Dict[str, Any]) -> ExecutionAuxFunctionDetails:
         return cls(
             defined=data['defined'],
             error=data['error'],
@@ -81,7 +83,7 @@ class ExecutionDetailsAuxFunctions(_BaseDataObject):
     alert_context: ExecutionAuxFunctionDetails
 
     @property
-    def errored(self):
+    def errored(self) -> bool:
         return self.title.errored \
             or self.runbook.errored \
             or self.severity.errored \
@@ -92,7 +94,7 @@ class ExecutionDetailsAuxFunctions(_BaseDataObject):
             or self.alert_context.errored
 
     @classmethod
-    def from_json(cls, data: Dict[str, any]):
+    def from_json(cls, data: Dict[str, Any]) -> ExecutionDetailsAuxFunctions:
         return cls(
             dedup=ExecutionAuxFunctionDetails.from_json(data['dedup']),
             title=ExecutionAuxFunctionDetails.from_json(data['title']),
@@ -113,21 +115,21 @@ class ExecutionDetails(_BaseDataObject):
     setup_error: Optional[str] = None
 
     @property
-    def errored(self):
+    def errored(self) -> bool:
         return self.input_error is not None \
                or self.setup_error is not None \
                or self.aux_functions.errored \
                or self.primary_functions.errored
 
-
     @classmethod
-    def from_json(cls, data: Dict[str, any]):
+    def from_json(cls, data: Dict[str, Any]) -> ExecutionDetails:
         return cls(
             input_error=data.get('input_error'),
             setup_error=data.get('setup_error'),
             aux_functions=ExecutionDetailsAuxFunctions.from_json(data['aux_functions']),
             primary_functions=ExecutionDetailsPrimaryFunctions.from_json(data['primary_functions']),
         )
+
 
 @dataclass(frozen=True)
 class ExecutionOutput(_BaseDataObject):
@@ -136,20 +138,21 @@ class ExecutionOutput(_BaseDataObject):
     details: Optional[ExecutionDetails] = None
 
     @property
-    def trigger_alert(self):
+    def trigger_alert(self) -> bool:
         return self.match is not None or self.errored is True
 
     @property
-    def errored(self):
-        return (self.match and self.match.errored) or (self.details and self.details.errored)
+    def errored(self) -> bool:
+        return bool((self.match and self.match.errored) or (self.details and self.details.errored))
 
     @classmethod
-    def from_json(cls, data: Dict[str, any]):
+    def from_json(cls, data: Dict[str, Any]) -> ExecutionOutput:
         return cls(
             match=ExecutionMatch.from_json(data['match']),
             details=ExecutionDetails.from_json(data['details']),
             input_id=data['input_id'],
         )
+
 
 @dataclass(frozen=True)
 class ExecutionResult(_BaseDataObject):
@@ -158,7 +161,7 @@ class ExecutionResult(_BaseDataObject):
     data: Optional[List[ExecutionOutput]] = None
 
     @classmethod
-    def from_json(cls, data: Dict[str, any]):
+    def from_json(cls, data: Dict[str, Any]) -> ExecutionResult:
         outputs = []
         for json_str in data['data']:
             obj = ExecutionOutput.from_json(json_str)

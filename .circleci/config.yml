@@ -11,4 +11,7 @@ jobs:
             command: make deps
         - run:
             name: Run tests
+            command: make lint
+        - run:
+            name: Run tests
             command: make test

@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 from dataclasses import dataclass
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Any
 
 from .common import (
     CloudResourceInput,
@@ -40,7 +40,7 @@ class ExecutionTaskInput(_BaseDataObject):
     url: Optional[str] = None
 
     @classmethod
-    def from_json(cls, data: Dict[str, any]):
+    def from_json(cls, data: Dict[str, Any]) -> ExecutionTaskInput:
         return cls(
             mode=ExecutionMode(data['mode']),
             url=data.get('url'),
@@ -49,7 +49,7 @@ class ExecutionTaskInput(_BaseDataObject):
         )
 
     @classmethod
-    def inline_resources(cls, resources: List[CloudResourceInput]):
+    def inline_resources(cls, resources: List[CloudResourceInput]) -> ExecutionTaskInput:
         return cls(
             url=None,
             mode=ExecutionMode.INLINE,
@@ -58,7 +58,7 @@ class ExecutionTaskInput(_BaseDataObject):
         )
 
     @classmethod
-    def inline_events(cls, events: List[LogEventInput]):
+    def inline_events(cls, events: List[LogEventInput]) -> ExecutionTaskInput:
         return cls(
             url=None,
             mode=ExecutionMode.INLINE,
@@ -73,14 +73,14 @@ class ExecutionTaskOutput(_BaseDataObject):
     url: Optional[str] = None
 
     @classmethod
-    def from_json(cls, data: Dict[str, any]):
+    def from_json(cls, data: Dict[str, Any]) -> ExecutionTaskOutput:
         return cls(
             mode=ExecutionMode(data['mode']),
             url=data.get('url'),
         )
 
     @classmethod
-    def inline(cls):
+    def inline(cls) -> ExecutionTaskOutput:
         return cls(
             url=None,
             mode=ExecutionMode.INLINE,
@@ -92,7 +92,7 @@ class ExecutionTaskOptions(_BaseDataObject):
     execution_details: bool
 
     @classmethod
-    def from_json(cls, data: Dict[str, any]):
+    def from_json(cls, data: Dict[str, Any]) -> ExecutionTaskOptions:
         return cls(
             execution_details=data['execution_details'],
         )
@@ -107,7 +107,7 @@ class ExecutionEnv(_BaseDataObject):
     data_model: Optional[ExecutionEnvComponent]
 
     @classmethod
-    def from_json(cls, data: Dict[str, any]):
+    def from_json(cls, data: Dict[str, Any]) -> ExecutionEnv:
         return cls(
             mocks=data.get('mocks', []),
             outputs=data.get('outputs', []),
@@ -124,7 +124,7 @@ class ExecutionTaskEnv(_BaseDataObject):
     env: Optional[ExecutionEnv] = None
 
     @classmethod
-    def from_json(cls, data: Dict[str, any]):
+    def from_json(cls, data: Dict[str, Any]) -> ExecutionTaskEnv:
         return cls(
             mode=ExecutionMode(data['mode']),
             url=data.get('url'),
@@ -132,7 +132,7 @@ class ExecutionTaskEnv(_BaseDataObject):
         )
 
     @classmethod
-    def inline(cls, env: ExecutionEnv):
+    def inline(cls, env: ExecutionEnv) -> ExecutionTaskEnv:
         return cls(
             env=env,
             url=None,
@@ -148,7 +148,7 @@ class ExecutionTask(_BaseDataObject):
     options: ExecutionTaskOptions
 
     @classmethod
-    def from_json(cls, data: Dict[str, any]):
+    def from_json(cls, data: Dict[str, Any]) -> ExecutionTask:
         return cls(
             env=ExecutionTaskEnv.from_json(data['env']),
             input=ExecutionTaskInput.from_json(data['input']),

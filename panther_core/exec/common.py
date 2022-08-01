@@ -16,6 +16,7 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
+from __future__ import annotations
 import json
 
 from ..rule import ERROR_TYPE_RULE, ERROR_TYPE_SCHEDULED_RULE
@@ -32,6 +33,7 @@ ExecutionEnvComponent = Dict[str, Any]
 
 LogEventInput = Dict[str, Any]
 CloudResourceInput = Dict[str, Any]
+
 
 @dataclass(frozen=True)
 class ExecutionMatch:
@@ -60,16 +62,17 @@ class ExecutionMatch:
     title: Optional[str] = None
 
     @property
-    def errored(self):
+    def errored(self) -> bool:
         return self.alertType == ERROR_TYPE_RULE or \
                self.alertType == ERROR_TYPE_SCHEDULED_RULE \
                or self.alertType == ERROR_TYPE_POLICY
 
     @classmethod
-    def from_json(cls, data: Dict[str, any]):
+    def from_json(cls, data: Dict[str, Any]) -> Optional[ExecutionMatch]:
         if data is not None:
             return cls(**data)
         return None
+
 
 @dataclass(frozen=True)
 class _BaseDataObject:

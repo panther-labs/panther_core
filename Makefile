@@ -1,7 +1,5 @@
 packages = panther_core
 
-ci: lint test
-
 
 deps:
 	pipenv install --dev
@@ -24,10 +22,10 @@ install:
 	pipenv lock -r  > requirements.txt
 
 package-clean:
-	rm -r dist
+	rm -rf dist
 	rm -f MANIFEST
 
-package: install package-clean
+package: package-clean install test lint
 	pipenv run python3 setup.py sdist
 
 publish: install package
