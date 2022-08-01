@@ -1,4 +1,4 @@
-AnalysisType: rule 
+AnalysisType: rule
 Filename: example_rule_mocks.py
 DisplayName: MFA Rule
 Description: MFA is a security best practice that adds an extra layer of protection for your AWS account logins.
@@ -33,8 +33,8 @@ Tests:
     Mocks:
       [
         {
-          "objectName": "boto3",
-          "returnValue": "example_boto3_return_value"
+          "objectName": "json",
+          "returnValue": "example_json_return_value"
         },
         {
           "objectName": "date",

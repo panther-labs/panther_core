@@ -1,4 +1,4 @@
-import boto3
+import json
 from datetime import date
 
 IGNORED_USERS = {}

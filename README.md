@@ -33,19 +33,20 @@ If you'd prefer instead to run from source for development reasons, first setup 
 $ make install
 $ pipenv run -- pip3 install -e .
 ```
-## Updating Versions
 
-There exists a utility script to update the version number in relevant files if a new release is being created:
-
-```bash
-cd bin/
-./version_bump.py 0.10.9  #replace with the new version you are releasing
-```
 If you would rather use the `panther_core` outside of the virtual environment, install it  directly:
 
 ```bash
 $ make deps
 $ pip3 install -e .
+```
+
+## Publishing
+
+Update the version in `setup.py` in a pull request and merge. After the merge, setup a GitHub release with the appropriate release and tag with the format `vX.X.X`. Once this is done, run the following on the `main` branch:
+
+```bash
+$ make publish
 ```
 
 # Contributing
