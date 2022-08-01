@@ -23,7 +23,11 @@ install:
 	pipenv install --dev
 	pipenv lock -r  > requirements.txt
 
-package: install
+package-clean:
+	rm -r dist
+	rm -f MANIFEST
+
+package: install package-clean
 	pipenv run python3 setup.py sdist
 
 publish: install package

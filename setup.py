@@ -18,19 +18,18 @@ setup(
     package_dir={'exec': 'panther_core/exec'},
     version='0.0.11',
     license='AGPL-3.0',
-    description=
-    'Panther command line interface for writing, testing, and packaging policies/rules.',
+    description='Panther core library',
     author='Panther Labs Inc',
     author_email='pypi@runpanther.io',
     url='https://github.com/panther-labs/panther_core',
-    download_url = 'https://github.com/panther-labs/panther_core/archive/v0.0.11.tar.gz',
+    download_url='https://github.com/panther-labs/panther_core/archive/v0.0.11.tar.gz',
     keywords=['Security', 'CLI'],
     install_requires=install_requires,
     classifiers=[
+        'Topic :: Security',
         'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
-        'Topic :: Security',
-        'License :: OSI Approved :: GNU Affero General Public License v3',
         'Programming Language :: Python :: 3.9',
+        'License :: OSI Approved :: GNU Affero General Public License v3',
     ],
 )
