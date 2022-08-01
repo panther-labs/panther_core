@@ -11,7 +11,7 @@ deps-update:
 lint:
 	pipenv run mypy $(packages) --disallow-untyped-defs --ignore-missing-imports --warn-unused-ignores
 	pipenv run bandit -r $(packages)
-	pipenv run pylint $(packages) --disable=missing-docstring,bad-continuation,duplicate-code,W0511,R0912,too-many-lines --max-line-length=100
+	pipenv run pylint $(packages) --disable=missing-docstring,bad-continuation,duplicate-code,W0511,R0912,too-many-lines,too-many-instance-attributes --max-line-length=140
 
 fmt:
 	pipenv run isort --profile=black $(packages)

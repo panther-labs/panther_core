@@ -18,13 +18,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from __future__ import annotations
 import json
+from enum import Enum
+from typing import Any, Dict, List, Optional
+from dataclasses import asdict, dataclass
 
 from ..rule import ERROR_TYPE_RULE, ERROR_TYPE_SCHEDULED_RULE
 from ..policy import ERROR_TYPE_POLICY
-
-from dataclasses import asdict, dataclass
-from enum import Enum
-from typing import Any, Dict, List, Optional
 
 
 # Aliases
@@ -39,22 +38,22 @@ CloudResourceInput = Dict[str, Any]
 class ExecutionMatch:
 
     # required for all matches
-    alertType: str
-    detectionType: str
-    detectionId: str
-    detectionVersion: str
-    detectionTags: List[str]
-    detectionReports: Dict[str, List[str]]
-    detectionSeverity: str
-    dedupString: str
-    dedupPeriodMins: int
+    alert_type: str
+    detection_type: str
+    detection_id: str
+    detection_version: str
+    detection_tags: List[str]
+    detection_reports: Dict[str, List[str]]
+    detection_severity: str
+    dedup_string: str
+    dedup_period_mins: int
     event: Dict[str, Any]
     # one of these will be set
-    eventId: Optional[str] = None
-    replayId: Optional[str] = None
+    event_id: Optional[str] = None
+    replay_id: Optional[str] = None
     # optional dynamic fields
     severity: Optional[str] = None
-    alertContext: Optional[str] = None
+    alert_context: Optional[str] = None
     description: Optional[str] = None
     destinations: Optional[List[str]] = None
     reference: Optional[str] = None
@@ -63,9 +62,9 @@ class ExecutionMatch:
 
     @property
     def errored(self) -> bool:
-        return self.alertType == ERROR_TYPE_RULE or \
-               self.alertType == ERROR_TYPE_SCHEDULED_RULE \
-               or self.alertType == ERROR_TYPE_POLICY
+        return self.alert_type == ERROR_TYPE_RULE or \
+               self.alert_type == ERROR_TYPE_SCHEDULED_RULE \
+               or self.alert_type == ERROR_TYPE_POLICY
 
     @classmethod
     def from_json(cls, data: Dict[str, Any]) -> Optional[ExecutionMatch]:

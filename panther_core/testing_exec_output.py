@@ -266,7 +266,7 @@ class TestCaseEvaluator:
         return TestResult(
             id=self._spec.id,
             name=self._spec.name,
-            detectionId=self._exec_match.detectionId if self._exec_match else '',
+            detectionId=self._exec_match.detection_id if self._exec_match else '',
             genericError=FunctionTestResult.format_error(
                 generic_error, title=generic_error_title
             ),
