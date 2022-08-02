@@ -87,15 +87,15 @@ class TestTestCaseEvaluator2(unittest.TestCase):
         spec = TestSpecification(id='test-id', name='test-name', data={}, mocks=[], expectations=TestExpectations(detection=True))
         exec_match = ExecutionMatch(
             severity='INFO',
-            detectionId=spec.id,
-            detectionType=TYPE_RULE,
-            alertType=TYPE_RULE,
-            detectionTags=[],
-            detectionVersion='',
-            detectionReports={},
-            dedupString='',
-            detectionSeverity='INFO',
-            dedupPeriodMins=0,
+            detection_id=spec.id,
+            detection_type=TYPE_RULE,
+            alert_type=TYPE_RULE,
+            detection_tags=[],
+            detection_version='',
+            detection_reports={},
+            dedup_string='',
+            detection_severity='INFO',
+            dedup_period_mins=0,
             event={}
         )
         exec_details = ExecutionDetails(
@@ -148,15 +148,15 @@ class TestTestCaseEvaluator2(unittest.TestCase):
         spec = TestSpecification(id='test-id', name='test-name', data={}, mocks=[], expectations=TestExpectations(detection=True))
         exec_match = ExecutionMatch(
             severity='INFO',
-            detectionId=spec.id,
-            detectionType=TYPE_RULE,
-            alertType=ERROR_TYPE_RULE,
-            detectionTags=[],
-            detectionVersion='',
-            detectionReports={},
-            dedupString='',
-            detectionSeverity='INFO',
-            dedupPeriodMins=0,
+            detection_id=spec.id,
+            detection_type=TYPE_RULE,
+            alert_type=ERROR_TYPE_RULE,
+            detection_tags=[],
+            detection_version='',
+            detection_reports={},
+            dedup_string='',
+            detection_severity='INFO',
+            dedup_period_mins=0,
             event={}
         )
         exec_details = ExecutionDetails(
@@ -210,15 +210,15 @@ class TestTestCaseEvaluator2(unittest.TestCase):
         spec = TestSpecification(id='test-id', name='test-name', data={}, mocks=[], expectations=TestExpectations(detection=True))
         exec_match = ExecutionMatch(
             severity='INFO',
-            detectionId=spec.id,
-            detectionType=TYPE_RULE,
-            alertType=TYPE_RULE,
-            detectionTags=[],
-            detectionVersion='',
-            detectionReports={},
-            dedupString='',
-            detectionSeverity='INFO',
-            dedupPeriodMins=0,
+            detection_id=spec.id,
+            detection_type=TYPE_RULE,
+            alert_type=TYPE_RULE,
+            detection_tags=[],
+            detection_version='',
+            detection_reports={},
+            dedup_string='',
+            detection_severity='INFO',
+            dedup_period_mins=0,
             event={}
         )
         exec_details = ExecutionDetails(
@@ -274,15 +274,15 @@ class TestTestCaseEvaluator2(unittest.TestCase):
         spec = TestSpecification(id='test-id', name='test-name', data={}, mocks=[], expectations=TestExpectations(detection=False))
         exec_match = ExecutionMatch(
             severity='INFO',
-            detectionId=spec.id,
-            detectionType=TYPE_RULE,
-            alertType=TYPE_RULE,
-            detectionTags=[],
-            detectionVersion='',
-            detectionReports={},
-            dedupString='',
-            detectionSeverity='INFO',
-            dedupPeriodMins=0,
+            detection_id=spec.id,
+            detection_type=TYPE_RULE,
+            alert_type=TYPE_RULE,
+            detection_tags=[],
+            detection_version='',
+            detection_reports={},
+            dedup_string='',
+            detection_severity='INFO',
+            dedup_period_mins=0,
             event={}
         )
         exec_details = ExecutionDetails(
@@ -336,15 +336,15 @@ class TestTestCaseEvaluator2(unittest.TestCase):
         spec = TestSpecification(id='test-id', name='test-name', data={}, mocks=[], expectations=TestExpectations(detection=False))
         exec_match = ExecutionMatch(
             severity='INFO',
-            detectionId=spec.id,
-            detectionType=TYPE_RULE,
-            alertType=TYPE_RULE,
-            detectionTags=[],
-            detectionVersion='',
-            detectionReports={},
-            dedupString='',
-            detectionSeverity='INFO',
-            dedupPeriodMins=0,
+            detection_id=spec.id,
+            detection_type=TYPE_RULE,
+            alert_type=TYPE_RULE,
+            detection_tags=[],
+            detection_version='',
+            detection_reports={},
+            dedup_string='',
+            detection_severity='INFO',
+            dedup_period_mins=0,
             event={}
         )
         exec_details = ExecutionDetails(
@@ -413,15 +413,15 @@ class TestTestCaseEvaluator2(unittest.TestCase):
         spec = TestSpecification(id='test-id', name='test-name', data={}, mocks=[], expectations=TestExpectations(detection=True))
         exec_match = ExecutionMatch(
             severity='INFO',
-            detectionId=spec.id,
-            detectionType=TYPE_POLICY,
-            alertType=TYPE_POLICY,
-            detectionTags=[],
-            detectionVersion='',
-            detectionReports={},
-            dedupString='',
-            detectionSeverity='INFO',
-            dedupPeriodMins=0,
+            detection_id=spec.id,
+            detection_type=TYPE_POLICY,
+            alert_type=TYPE_POLICY,
+            detection_tags=[],
+            detection_version='',
+            detection_reports={},
+            dedup_string='',
+            detection_severity='INFO',
+            dedup_period_mins=0,
             event={}
         )
         exec_details = ExecutionDetails(

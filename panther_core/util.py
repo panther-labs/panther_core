@@ -16,7 +16,6 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-import logging
 import os
 from importlib import util as import_util
 from pathlib import Path

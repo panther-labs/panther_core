@@ -16,13 +16,11 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
+from __future__ import annotations
 import json
 from dataclasses import dataclass
 from typing import Any, Dict, List, Optional, Tuple, Type, Union
 
-from .detection import DetectionResult
-from .policy import TYPE_POLICY, Policy
-from .rule import Rule
 from .exec.results import ExecutionOutput
 
 
@@ -142,16 +140,22 @@ class TestCaseEvaluator:
     by performing assertions and determining the status"""
 
     @classmethod
-    def for_policies(cls, spec: TestSpecification, exec_output: ExecutionOutput):
+    def for_policies(cls, spec: TestSpecification,
+                     exec_output: ExecutionOutput) -> TestCaseEvaluator:
         return cls(spec=spec, exec_output=exec_output, alert_value=False)
 
     @classmethod
-    def for_rules(cls, spec: TestSpecification, exec_output: ExecutionOutput):
+    def for_rules(cls, spec: TestSpecification,
+                  exec_output: ExecutionOutput) -> TestCaseEvaluator:
         return cls(spec=spec, exec_output=exec_output, alert_value=True)
 
     def __init__(self, spec: TestSpecification, exec_output: ExecutionOutput, alert_value: bool):
+        if exec_output.details is None:
+            raise RuntimeError("TestCaseEvaluator received ExecutionOutput without details")
+
         self._spec = spec
         self._exec_output = exec_output
+        self._exec_details = exec_output.details
         self._exec_match = exec_output.match
         self._detection_alert_value = alert_value
 
@@ -162,18 +166,24 @@ class TestCaseEvaluator:
         # Only if the detection is expected to trigger an alert,
         # we want to include errors from other functions in the status.
         if self._spec.expectations.detection == self._detection_alert_value:
-            return self._exec_output.trigger_alert and not self._exec_output.errored
+            return bool(self._exec_output.trigger_alert and not self._exec_output.errored)
+
         # expectations match the detection output
-        return self._spec.expectations.detection == self._exec_output.details.primary_functions.detection.output
+        return bool(
+            self._spec.expectations.detection ==
+            self._exec_details.primary_functions.detection.output
+        )
 
     def _get_generic_error_details(self) -> Tuple[Optional[str], Optional[str]]:
         generic_error = None
         generic_error_title = None
-        if self._exec_output.details.input_error is not None:
-            generic_error = self._exec_output.details.input_error
+
+        if self._exec_details.input_error is not None:
+            generic_error = self._exec_details.input_error
             generic_error_title = "Invalid event"
-        elif self._exec_output.details.setup_error is not None:
-            generic_error = self._exec_output.details.setup_error
+        elif self._exec_details.setup_error is not None:
+            generic_error = self._exec_details.setup_error
+
         return generic_error, generic_error_title
 
     def interpret(self, ignore_exception_types: List[Type[Exception]] = None) -> TestResult:
@@ -186,9 +196,9 @@ class TestCaseEvaluator:
 
         function_results = dict(
             detectionFunction=FunctionTestResult.new(
-                self._spec.expectations.detection == self._exec_output.details.primary_functions.detection.output,
-                self._exec_output.details.primary_functions.detection.output,
-                ignoreable_exception(self._exec_output.details.primary_functions.detection.error,
+                self._spec.expectations.detection == self._exec_details.primary_functions.detection.output,
+                self._exec_details.primary_functions.detection.output,
+                ignoreable_exception(self._exec_details.primary_functions.detection.error,
                                      ignore_exception_types),
             )
         )
@@ -201,51 +211,51 @@ class TestCaseEvaluator:
             function_results.update(
                 dict(
                     titleFunction=FunctionTestResult.new(
-                        self._exec_output.details.aux_functions.title.error is None,
-                        self._exec_output.details.aux_functions.title.output,
-                        ignoreable_exception(self._exec_output.details.aux_functions.title.error,
+                        self._exec_details.aux_functions.title.error is None,
+                        self._exec_details.aux_functions.title.output,
+                        ignoreable_exception(self._exec_details.aux_functions.title.error,
                                              ignore_exception_types),
                     ),
                     descriptionFunction=FunctionTestResult.new(
-                        self._exec_output.details.aux_functions.description.error is None,
-                        self._exec_output.details.aux_functions.description.output,
-                        ignoreable_exception(self._exec_output.details.aux_functions.description.error,
+                        self._exec_details.aux_functions.description.error is None,
+                        self._exec_details.aux_functions.description.output,
+                        ignoreable_exception(self._exec_details.aux_functions.description.error,
                                              ignore_exception_types),
                     ),
                     referenceFunction=FunctionTestResult.new(
-                        self._exec_output.details.aux_functions.reference.error is None,
-                        self._exec_output.details.aux_functions.reference.output,
-                        ignoreable_exception(self._exec_output.details.aux_functions.reference.error,
+                        self._exec_details.aux_functions.reference.error is None,
+                        self._exec_details.aux_functions.reference.output,
+                        ignoreable_exception(self._exec_details.aux_functions.reference.error,
                                              ignore_exception_types),
                     ),
                     severityFunction=FunctionTestResult.new(
-                        self._exec_output.details.aux_functions.severity.error is None,
-                        self._exec_output.details.aux_functions.severity.output,
-                        ignoreable_exception(self._exec_output.details.aux_functions.severity.error,
+                        self._exec_details.aux_functions.severity.error is None,
+                        self._exec_details.aux_functions.severity.output,
+                        ignoreable_exception(self._exec_details.aux_functions.severity.error,
                                              ignore_exception_types),
                     ),
                     runbookFunction=FunctionTestResult.new(
-                        self._exec_output.details.aux_functions.runbook.error is None,
-                        self._exec_output.details.aux_functions.runbook.output,
-                        ignoreable_exception(self._exec_output.details.aux_functions.runbook.error,
+                        self._exec_details.aux_functions.runbook.error is None,
+                        self._exec_details.aux_functions.runbook.output,
+                        ignoreable_exception(self._exec_details.aux_functions.runbook.error,
                                              ignore_exception_types),
                     ),
                     destinationsFunction=FunctionTestResult.new(
-                        self._exec_output.details.aux_functions.destinations.error is None,
-                        self._exec_output.details.aux_functions.destinations.output,
-                        ignoreable_exception(self._exec_output.details.aux_functions.destinations.error,
+                        self._exec_details.aux_functions.destinations.error is None,
+                        self._exec_details.aux_functions.destinations.output,
+                        ignoreable_exception(self._exec_details.aux_functions.destinations.error,
                                              ignore_exception_types),
                     ),
                     dedupFunction=FunctionTestResult.new(
-                        self._exec_output.details.aux_functions.dedup.error is None,
-                        self._exec_output.details.aux_functions.dedup.output,
-                        ignoreable_exception(self._exec_output.details.aux_functions.dedup.error,
+                        self._exec_details.aux_functions.dedup.error is None,
+                        self._exec_details.aux_functions.dedup.output,
+                        ignoreable_exception(self._exec_details.aux_functions.dedup.error,
                                              ignore_exception_types),
                     ),
                     alertContextFunction=FunctionTestResult.new(
-                        self._exec_output.details.aux_functions.alert_context.error is None,
-                        self._exec_output.details.aux_functions.alert_context.output,
-                        ignoreable_exception(self._exec_output.details.aux_functions.alert_context.error,
+                        self._exec_details.aux_functions.alert_context.error is None,
+                        self._exec_details.aux_functions.alert_context.output,
+                        ignoreable_exception(self._exec_details.aux_functions.alert_context.error,
                                              ignore_exception_types),
                     ),
                 )
@@ -256,7 +266,7 @@ class TestCaseEvaluator:
         return TestResult(
             id=self._spec.id,
             name=self._spec.name,
-            detectionId=self._exec_match.detectionId if self._exec_match else '',
+            detectionId=self._exec_match.detection_id if self._exec_match else '',
             genericError=FunctionTestResult.format_error(
                 generic_error, title=generic_error_title
             ),

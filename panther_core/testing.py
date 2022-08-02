@@ -23,7 +23,6 @@ from typing import Any, Dict, List, Optional, Tuple, Type, Union
 from .detection import DetectionResult
 from .policy import TYPE_POLICY, Policy
 from .rule import Rule
-from .exec.results import ExecutionOutput
 
 
 @dataclass
